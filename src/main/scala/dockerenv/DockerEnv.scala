@@ -68,10 +68,10 @@ object DockerEnv {
     def tryRunScript(script: String, args: String*): Try[(Int, String)] = {
       scriptLogger(args.mkString(script + " ", " ", " returned:"))
       Try(run(script, args: _*)) match {
-        case res@Success(output) =>
+        case res @ Success(output) =>
           scriptLogger(output.toString())
           res
-        case res@Failure(output) =>
+        case res @ Failure(output) =>
           scriptLogger(output.toString())
           res
       }
@@ -79,9 +79,9 @@ object DockerEnv {
   }
 
   def run(script: String, args: String*): (Int, String) = {
-    val buffer = new BufferLogger(s"$script: ")
+    val buffer                          = new BufferLogger(s"$script: ")
     val builder: process.ProcessBuilder = parseScript(script, args.toSeq)
-    val res = builder.run(buffer)
+    val res                             = builder.run(buffer)
     res.exitValue() -> buffer.output
   }
 
@@ -115,4 +115,3 @@ object DockerEnv {
   }
 
 }
-

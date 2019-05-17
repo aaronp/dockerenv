@@ -33,6 +33,12 @@ siteSubdirName in SiteScaladoc := "api/latest"
 
 libraryDependencies += "com.typesafe" % "config" % "1.3.3" % "provided"
 
+val orientDBDependencies = List( //
+                                "com.michaelpollmeier" % "orientdb-gremlin" % "3.2.3.0",
+                                "com.michaelpollmeier" %% "gremlin-scala"   % "3.3.4.16")
+
+libraryDependencies ++= orientDBDependencies.map(_ % "test")
+
 libraryDependencies ++= List(
   "org.scalactic" %% "scalactic" % "3.0.4" % "test",
   "org.scalatest" %% "scalatest" % "3.0.4" % "test",
