@@ -1,4 +1,4 @@
-use esa
+use dockerenv
 db.createUser(
   {
     user: "serviceUser",

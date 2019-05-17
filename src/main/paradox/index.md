@@ -18,7 +18,8 @@ The scaladocs are [here](https://aaronp.github.io/dockerenv/api/latest/dockerenv
 
 @@@ index
 
-* [Abouyt](about.md)
+* [About](about.md)
+* [Development](development.md)
 * [Usage](usage.md)
 * [Building/Releasing](building.md)
 * [License](license.md)

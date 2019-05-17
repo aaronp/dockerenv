@@ -17,7 +17,7 @@
 # see https://hub.docker.com/_/orientdb
 export VOLUME_NAME=${VOLUME_NAME:-orientDb-data}
 export BACKUP_VOLUME_NAME=${VOLUME_NAME:-orientDb-data-backup}
-export IMAGE_NAME=${IMAGE_NAME:-esa-orientdb}
+export IMAGE_NAME=${IMAGE_NAME:-dockerenv-orientdb}
 export ORIENTDB_PORT=${ORIENTDB_PORT:-9020}
 
 # see https://docs.docker.com/storage/volumes/
