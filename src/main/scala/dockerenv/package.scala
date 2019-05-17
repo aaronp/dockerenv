@@ -23,7 +23,7 @@ package object dockerenv {
   def envFor(scriptDir: String, workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger): DockerEnv.Instance = {
 
     val scriptWeCanAssumeIsThere = s"$scriptDir/isDockerRunning.sh"
-    val JarPath                  = ("jar:file:(.*)!/" + scriptWeCanAssumeIsThere).r
+    val JarPath = ("jar:file:(.*)!/" + scriptWeCanAssumeIsThere).r
 
     val url = {
       val scriptUrl = getClass.getClassLoader.getResource(scriptWeCanAssumeIsThere)
@@ -44,12 +44,28 @@ package object dockerenv {
     }
   }
 
+
+  /**
+    * log to std output. see [[defaultLogger]]
+    */
+  lazy val stdOut: String => Unit = println(_: String)
+  /**
+    * An ignoring logging function. see [[defaultLogger]]
+    */
+  lazy val devNull: String => Unit = (_: String) => {}
+
   /**
     * A default logger, which can be *ahem* globally replaced if needed.
     *
-    * I didn't want to bind any additional dependencies to this project, including loggers, even slf4j ones
+    * I didn't want to bind any additional dependencies to this project, including loggers, even slf4j ones.
+    *
+    * You could explicitly pass a logging function to a dockerenv.* function, or set the global default:
+    *
+    * {{{
+    *   dockerenv.defaultLogger = dockerenv.stdOut
+    * }}}
     */
-  var defaultLogger: String => Unit = println(_: String)
+  var defaultLogger: String => Unit = devNull
 
   /**
     * The default location under which scripts are extraxted
