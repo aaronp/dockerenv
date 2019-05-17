@@ -3,4 +3,4 @@ package dockerenv
 /**
   * Represents a test which needs Kafka Running
   */
-abstract class BaseKafkaSpec extends BaseDockerSpec("scripts/kafka")
+abstract class BaseKafkaSpec extends BaseDockerSpec(DockerEnv.kafka())

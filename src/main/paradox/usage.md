@@ -2,13 +2,24 @@
 
 The goal is to ensure some docker service is running/available, typically for running tests.
 
-I've also used it for running example applications like this:
+The main published resource is just the 'DockerEnv' trait, which provides a hook to start, stop and check running containers.
 
-assuming: 
+This repo also contains a collection of common scripts for using different containers (mongo, kafka, orientdb, etc).
+
+As the primary use-case is really for testing, you will typically want to depend on the test-artifact like this:
+
+```scala
+libraryDependencies += "com.github.aaronp" %% "dockerenv" % "{version}" classifier "tests"
+``` 
+
+
+You could also use this for running example applications like this:
+
+assuming a project layout where 'Main' is an application which talks to mongo: 
  * src/main/scala/myapp/Main.scala 
  * src/test/scala/myapp/DevMain.scala
  
-Where DevMain exposes the convenience of starting dependencies:
+You could create a 'DevMain' to as a convenience to run your app stand-alone:
 
 ```scala
 package myapp

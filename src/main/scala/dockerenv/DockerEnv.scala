@@ -1,6 +1,6 @@
 package dockerenv
 
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Files, Paths}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.sys.process
@@ -49,7 +49,57 @@ trait DockerEnv {
 
 object DockerEnv {
 
-  def apply(scriptDir: String, scriptLogger: String => Unit = println(_: String)) = new Instance(scriptDir)
+  /**
+    * A default logger, which can be *ahem* globally replaced if needed.
+    *
+    * I didn't want to bind any additional dependencies to this project, including loggers, even slf4j ones
+    */
+  var defaultLogger: String => Unit = println(_: String)
+
+  /**
+    * The default location under which scripts are extraxted
+    */
+  private val DefaultWorkDir = sys.env.getOrElse("DockerEnvWorkDir", "target/docker-env")
+
+  /** Convenience method for returning kafka services
+    *
+    * @param workDir      the directory under which the docker run scripts should be extracted
+    * @param scriptLogger a way to log the docker output
+    * @return a kafka environment
+    */
+  def kafka(workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger) = apply("scripts/kafka")
+
+  /** Convenience method for returning orientdb services
+    *
+    * @param workDir      the directory under which the docker run scripts should be extracted
+    * @param scriptLogger a way to log the docker output
+    * @return a orientdb environment
+    */
+  def orientDb(workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger) = apply("scripts/orientdb")
+
+  /** Convenience method for returning mongo services
+    *
+    * @param workDir      the directory under which the docker run scripts should be extracted
+    * @param scriptLogger a way to log the docker output
+    * @return a mongo environment
+    */
+  def mongo(workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger) = apply("scripts/mongo")
+
+  /**
+    * Creates a 'DockerEnv' for the given script location (e.g. 'scripts/kafka').
+    *
+    * This will entail having to extract the scripts from the 'dockerenv' jar dependency under the 'workDir'
+    *
+    * @param scriptDir    the relative path to the scripts (e.g. 'scripts/kafka')
+    * @param workDir      the local working directory to extract the files to
+    * @param scriptLogger a logger used for logging the script output
+    * @return a new DockerEnv instance
+    */
+  def apply(scriptDir: String, workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger) = {
+    dockerenv.envFor(scriptDir, workDir, scriptLogger)
+  }
+
+  private[dockerenv] def newInstance(scriptDir: String, scriptLogger: String => Unit) = new Instance(scriptDir)
 
   class Instance(scriptDir: String, scriptLogger: String => Unit = println(_: String)) extends DockerEnv {
     override def isRunning(): Boolean = {
@@ -68,10 +118,10 @@ object DockerEnv {
     def tryRunScript(script: String, args: String*): Try[(Int, String)] = {
       scriptLogger(args.mkString(script + " ", " ", " returned:"))
       Try(run(script, args: _*)) match {
-        case res @ Success(output) =>
+        case res@Success(output) =>
           scriptLogger(output.toString())
           res
-        case res @ Failure(output) =>
+        case res@Failure(output) =>
           scriptLogger(output.toString())
           res
       }
@@ -79,23 +129,37 @@ object DockerEnv {
   }
 
   def run(script: String, args: String*): (Int, String) = {
-    val buffer                          = new BufferLogger(s"$script: ")
+    val buffer = new BufferLogger(s"$script: ")
     val builder: process.ProcessBuilder = parseScript(script, args.toSeq)
-    val res                             = builder.run(buffer)
+    val res = builder.run(buffer)
     res.exitValue() -> buffer.output
   }
 
+  /**
+    * resolves the script and returns a process which will run in the script's parent directory
+    *
+    * @param script
+    * @param args
+    * @return
+    */
   private def parseScript(script: String, args: Seq[String]): process.ProcessBuilder = {
     import java.nio.file.attribute.PosixFilePermission
-    val location = getClass.getClassLoader.getResource(script)
-    require(location != null, s"Couldn't find $script")
+
     import sys.process._
 
-    val scriptLoc: Path = Paths.get(location.toURI)
-    import scala.collection.JavaConverters._
-    Files.setPosixFilePermissions(scriptLoc, PosixFilePermission.values.toSet.asJava)
-    val scriptFile = s"./${scriptLoc.getFileName.toString}"
-    Process(scriptFile +: args, scriptLoc.getParent.toFile)
+    val (path, fileName) = getClass.getClassLoader.getResource(script) match {
+      case location if location != null =>
+        val path = Paths.get(location.toURI)
+        import scala.collection.JavaConverters._
+        Files.setPosixFilePermissions(path, PosixFilePermission.values().toSet.asJava)
+        path -> s"./${path.getFileName}"
+      case _ if Files.exists(Paths.get(script)) =>
+        val path = Paths.get(script)
+        path -> path.toAbsolutePath.toString
+      case _ => sys.error(s"Couldn't resolve '${script}' on the classpath or file system")
+    }
+
+    Process(fileName +: args, path.getParent.toFile)
   }
 
   private class BufferLogger(prefix: String) extends ProcessLogger {
@@ -113,5 +177,6 @@ object DockerEnv {
 
     override def buffer[T](f: => T): T = f
   }
+
 
 }
