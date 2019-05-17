@@ -15,7 +15,7 @@
 #
 
 # see https://hub.docker.com/_/mongo
-export VOLUME_NAME=${VOLUME_NAME:-mongo-data}
+export VOLUME_NAME=${VOLUME_NAME:-dockerenv-mongo-data}
 export IMAGE_NAME=${IMAGE_NAME:-dockerenv-mongo}
 export MONGO_PORT=${MONGO_PORT:-9010}
 
