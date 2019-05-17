@@ -11,7 +11,14 @@ import scala.concurrent.duration._
 /**
   * Base test class which ensures the container in the script directory is running before/after the tests
   */
-abstract class BaseDockerSpec(val dockerEnv: DockerEnv.Instance) extends WordSpec with Matchers with Eventually with BeforeAndAfterAll with GivenWhenThen with ScalaFutures with BeforeAndAfterEach {
+abstract class BaseDockerSpec(val dockerEnv: DockerEnv.Instance)
+    extends WordSpec
+    with Matchers
+    with Eventually
+    with BeforeAndAfterAll
+    with GivenWhenThen
+    with ScalaFutures
+    with BeforeAndAfterEach {
 
   def this(scriptDir: String) = this(DockerEnv(scriptDir))
 
