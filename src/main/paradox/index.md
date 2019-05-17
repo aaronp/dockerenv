@@ -1,13 +1,12 @@
-Args4c
+DockerEnv
 ======
 [![Build Status](https://travis-ci.org/aaronp/dockerenv.svg?branch=master)](https://travis-ci.org/aaronp/dockerenv)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aaronp/dockerenv_2.12/badge.png)](https://maven-badges.herokuapp.com/maven-central/com.github.aaronp/dockerenv_2.12)
 [![Coverage Status](https://coveralls.io/repos/github/aaronp/dockerenv/badge.svg?branch=master)](https://coveralls.io/github/aaronp/dockerenv?branch=master)
 [![Scaladoc](https://javadoc-badge.appspot.com/com.github.aaronp/dockerenv_2.12.svg?label=scaladoc)](https://javadoc-badge.appspot.com/com.github.aaronp/dockerenv_2.12)
 
-# DockerEnv
 
-The 'dockeenv' is a little project for exposing an interface for start/stop hooks for services which can be run as docker containers.
+The 'dockerenv' is a little project for exposing an interface for start/stop hooks for services which can be run as docker containers.
 
 This makes is possible to simple but meaningful integration tests with real services instead of having to mock them out.
 

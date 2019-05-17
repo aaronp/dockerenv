@@ -23,7 +23,7 @@ package object dockerenv {
   def envFor(scriptDir: String, workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger): DockerEnv.Instance = {
 
     val scriptWeCanAssumeIsThere = s"$scriptDir/isDockerRunning.sh"
-    val JarPath = ("jar:file:(.*)!/" + scriptWeCanAssumeIsThere).r
+    val JarPath                  = ("jar:file:(.*)!/" + scriptWeCanAssumeIsThere).r
 
     val url = {
       val scriptUrl = getClass.getClassLoader.getResource(scriptWeCanAssumeIsThere)
@@ -44,11 +44,11 @@ package object dockerenv {
     }
   }
 
-
   /**
     * log to std output. see [[defaultLogger]]
     */
   lazy val stdOut: String => Unit = println(_: String)
+
   /**
     * An ignoring logging function. see [[defaultLogger]]
     */
