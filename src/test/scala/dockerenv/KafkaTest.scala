@@ -1,9 +1,26 @@
 package dockerenv
 
+import scala.collection.mutable.ListBuffer
 import scala.util.Success
 
 class KafkaTest extends BaseKafkaSpec {
 
+  "BaseKafkaSpec.withEnv(...).withLogger(...)" should {
+    "allow us to control the mount-point via the 'PROJECT_DIR' env property" in {
+      val dir    = "someDir"
+      val output = ListBuffer[String]()
+      val e = dockerEnv.withEnv("PROJECT_DIR" -> dir).withLogger { out =>
+        output ++= out.lines
+      }
+
+      e.stop()
+      e.start()
+      e.isRunning() shouldBe (true)
+      val Some(projectDirIsLineFromTheIsDockerRunningScript) = output.find(_.contains("PROJECT_DIR is "))
+      projectDirIsLineFromTheIsDockerRunningScript.lines.toList.head shouldBe s"PROJECT_DIR is $dir"
+
+    }
+  }
   "BaseKafkaSpec" should {
     "allow us to connect to the running kafka container" in insideRunningEnvironment {
       isDockerRunning() shouldBe true

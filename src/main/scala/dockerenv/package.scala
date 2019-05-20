@@ -14,13 +14,13 @@ package object dockerenv {
     }
   }
 
-  def kafka(workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger) = envFor("scripts/kafka", workDir, scriptLogger)
+  def kafka(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/kafka", workDir)
 
-  def mongo(workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger) = envFor("scripts/mongo", workDir, scriptLogger)
+  def mongo(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/mongo", workDir)
 
-  def orientdb(workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger) = envFor("scripts/orientdb", workDir, scriptLogger)
+  def orientdb(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/orientdb", workDir)
 
-  def envFor(scriptDir: String, workDir: String = DefaultWorkDir, scriptLogger: String => Unit = defaultLogger): DockerEnv.Instance = {
+  def envFor(scriptDir: String, workDir: String = DefaultWorkDir): DockerEnv.Instance = {
 
     val scriptWeCanAssumeIsThere = s"$scriptDir/isDockerRunning.sh"
     val JarPath                  = ("jar:file:(.*)!/" + scriptWeCanAssumeIsThere).r
@@ -39,8 +39,8 @@ package object dockerenv {
     url.toString match {
       case JarPath(pathToJar) =>
         val extractedScriptsDir = extractScriptsFromJar(pathToJar, toDir).resolve(scriptDir)
-        DockerEnv.newInstance(extractedScriptsDir.toAbsolutePath.toString, scriptLogger)
-      case _ => DockerEnv.newInstance(scriptDir, scriptLogger)
+        DockerEnv.newInstance(extractedScriptsDir.toAbsolutePath.toString)
+      case _ => DockerEnv.newInstance(scriptDir)
     }
   }
 

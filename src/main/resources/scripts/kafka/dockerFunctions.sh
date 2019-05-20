@@ -62,6 +62,7 @@ dockerRunKafka() {
 }
 
 invokeDockerRunKafka() {
+
     THIS_DIR="$(dirname ${0})"
     export PROJECT_DIR=${PROJECT_DIR:-`pwd`}
 
