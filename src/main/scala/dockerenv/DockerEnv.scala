@@ -120,10 +120,10 @@ object DockerEnv {
     def tryRunScript(script: String, args: Seq[String], env: Map[String, String]): Try[(Int, String)] = {
       scriptLogger(args.mkString(script + " ", " ", " returned:"))
       Try(run(script, args, extraEnv ++ env)) match {
-        case res @ Success((returnCode, output)) =>
+        case res@Success((returnCode, output)) =>
           scriptLogger(s"return code $returnCode : $output")
           res
-        case res @ Failure(error) =>
+        case res@Failure(error) =>
           scriptLogger(error.toString)
           res
       }
@@ -131,9 +131,9 @@ object DockerEnv {
   }
 
   def run(script: String, args: Seq[String], env: Map[String, String]): (Int, String) = {
-    val buffer                          = new BufferLogger(s"$script: ")
+    val buffer = new BufferLogger(s"$script: ")
     val builder: process.ProcessBuilder = parseScript(script, args, env)
-    val res                             = builder.run(buffer)
+    val res = builder.run(buffer)
     res.exitValue() -> buffer.output
   }
 
@@ -144,7 +144,7 @@ object DockerEnv {
     * @param args
     * @return
     */
-  private def parseScript(script: String, args: Seq[String], env: Map[String, String]): process.ProcessBuilder = {
+  def parseScript(script: String, args: Seq[String], env: Map[String, String]): process.ProcessBuilder = {
     import java.nio.file.attribute.PosixFilePermission
 
     import sys.process._
@@ -164,7 +164,7 @@ object DockerEnv {
     Process(fileName +: args, path.getParent.toFile, env.toSeq: _*)
   }
 
-  private class BufferLogger(prefix: String) extends ProcessLogger {
+  class BufferLogger(prefix: String) extends ProcessLogger {
     private val outputBuffer = ArrayBuffer[String]()
 
     def output = outputBuffer.mkString("\n")
@@ -175,6 +175,18 @@ object DockerEnv {
 
     override def err(s: => String): Unit = {
       outputBuffer.append(s"ERR: $s")
+    }
+
+    override def buffer[T](f: => T): T = f
+  }
+
+  case class ThunkLogger(onOut: String => Unit) extends ProcessLogger {
+    override def out(s: => String): Unit = {
+      onOut(s)
+    }
+
+    override def err(s: => String): Unit = {
+      onOut(s)
     }
 
     override def buffer[T](f: => T): T = f
