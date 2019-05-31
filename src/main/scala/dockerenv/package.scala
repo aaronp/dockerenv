@@ -18,6 +18,8 @@ package object dockerenv {
 
   def mongo(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/mongo", workDir)
 
+  def mqtt(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/mqtt", workDir)
+
   def orientdb(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/orientdb", workDir)
 
   def envFor(scriptDir: String, workDir: String = DefaultWorkDir): DockerEnv.Instance = {
