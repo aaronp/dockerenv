@@ -8,13 +8,16 @@ class MongoTest extends BaseMongoSpec {
     "allow us to connect to the running mongo container and ensure the service user exists" in insideRunningEnvironment {
       isDockerRunning() shouldBe true
 
-      val Success((0, listOutput)) = dockerEnv.runInScriptDir("mongo.sh", "listUsers.js")
+      val listOutput = eventually {
+        val Success((0, output)) = MongoEnv.listUsers(dockerEnv)
+        output
+      }
 
       if (!listOutput.contains("serviceUser")) {
-        val Success((0, createOutput)) = dockerEnv.runInScriptDir("mongo.sh", "createUser.js")
+        val Success((0, createOutput)) = MongoEnv.createUser(dockerEnv)
         createOutput should include("serviceUser")
       } else {
-        val Success((0, secondListOutput)) = dockerEnv.runInScriptDir("mongo.sh", "listUsers.js")
+        val Success((0, secondListOutput)) = MongoEnv.listUsers(dockerEnv)
         secondListOutput should include("serviceUser")
       }
     }
