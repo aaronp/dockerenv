@@ -14,6 +14,7 @@ enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin)
 enablePlugins(BuildInfoPlugin)
 
+scalaVersion := "2.13.0"
 paradoxProperties += ("project.url" -> "https://aaronp.github.io/dockerenv/docs/current/")
 
 Compile / paradoxMaterialTheme ~= {
@@ -32,8 +33,8 @@ siteSourceDirectory := target.value / "paradox" / "site" / "main"
 siteSubdirName in SiteScaladoc := "api/latest"
 
 libraryDependencies ++= List(
-  "org.scalactic" %% "scalactic" % "3.0.4" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+  "org.scalactic" %% "scalactic" % "3.0.8" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test",
   "org.pegdown"   % "pegdown"    % "1.6.0" % "test",
   "junit"         % "junit"      % "4.12"  % "test"
 )
