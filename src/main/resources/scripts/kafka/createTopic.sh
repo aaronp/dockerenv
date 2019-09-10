@@ -2,7 +2,7 @@
 # see https://hub.docker.com/r/spotify/kafka
 
 topic=$1
-partitions=$2
+partitions=${2:-1}
 DIR=`dirname $0`
 source "$DIR/"dockerFunctions.sh
 
