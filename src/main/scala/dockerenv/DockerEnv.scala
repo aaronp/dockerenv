@@ -70,6 +70,13 @@ object DockerEnv {
     */
   def mongo(workDir: String = DefaultWorkDir) = apply("scripts/mongo")
 
+  /** Convenience method for returning postgres services
+    *
+    * @param workDir the directory under which the docker run scripts should be extracted
+    * @return a mongo environment
+    */
+  def postgres(workDir: String = DefaultWorkDir) = apply("scripts/postgres")
+
   /**
     * Creates a 'DockerEnv' for the given script location (e.g. 'scripts/kafka').
     *
