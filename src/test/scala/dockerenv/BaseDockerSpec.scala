@@ -11,7 +11,7 @@ import scala.concurrent.duration._
 /**
   * Base test class which ensures the container in the script directory is running before/after the tests
   */
-abstract class BaseDockerSpec(val dockerEnv: DockerEnv.Instance)
+abstract class BaseDockerSpec(val dockerHandle: DockerEnv.Instance)
     extends WordSpec
     with Matchers
     with Eventually
@@ -61,14 +61,14 @@ abstract class BaseDockerSpec(val dockerEnv: DockerEnv.Instance)
   }
 
   def isDockerRunning(): Boolean = BaseDockerSpec.Lock.synchronized {
-    dockerEnv.isRunning()
+    dockerHandle.isRunning()
   }
 
   def ensureDockerIsRunning(): Boolean = startDocker
 
   def startDocker(): Boolean = BaseDockerSpec.Lock.synchronized {
     if (!isDockerRunning) {
-      dockerEnv.start()
+      dockerHandle.start()
       eventually {
         isDockerRunning() shouldBe true
       }
@@ -88,7 +88,7 @@ abstract class BaseDockerSpec(val dockerEnv: DockerEnv.Instance)
   def stopDocker(): Boolean = BaseDockerSpec.Lock.synchronized {
 
     if (isDockerRunning) {
-      dockerEnv.stop()
+      dockerHandle.stop()
       withClue("is running never returned false") {
         eventually {
           isDockerRunning() shouldBe false

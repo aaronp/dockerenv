@@ -14,15 +14,21 @@ package object dockerenv {
     }
   }
 
-  def kafka(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/kafka", workDir)
+  type Logger = String => Unit
 
-  def mongo(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/mongo", workDir)
+  def mysql(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mysql", workDir, logger)
 
-  def mqtt(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/mqtt", workDir)
+  def postgres(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/postgres", workDir, logger)
 
-  def orientdb(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/orientdb", workDir)
+  def kafka(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/kafka", workDir, logger)
 
-  def envFor(scriptDir: String, workDir: String = DefaultWorkDir): DockerEnv.Instance = {
+  def mongo(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mongo", workDir, logger)
+
+  def mqtt(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mqtt", workDir, logger)
+
+  def orientdb(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/orientdb", workDir, logger)
+
+  def envFor(scriptDir: String, workDir: String, logger : Logger): DockerEnv.Instance = {
 
     val scriptWeCanAssumeIsThere = s"$scriptDir/isDockerRunning.sh"
     val JarPath                  = ("jar:file:(.*)!/" + scriptWeCanAssumeIsThere).r
@@ -41,20 +47,20 @@ package object dockerenv {
     url.toString match {
       case JarPath(pathToJar) =>
         val extractedScriptsDir = extractScriptsFromJar(pathToJar, toDir).resolve(scriptDir)
-        DockerEnv.newInstance(extractedScriptsDir.toAbsolutePath.toString)
-      case _ => DockerEnv.newInstance(scriptDir)
+        DockerEnv.newInstance(extractedScriptsDir.toAbsolutePath.toString, logger)
+      case _ => DockerEnv.newInstance(scriptDir, logger)
     }
   }
 
   /**
     * log to std output. see [[defaultLogger]]
     */
-  lazy val stdOut: String => Unit = println(_: String)
+  lazy val stdOut: Logger = println(_: String)
 
   /**
     * An ignoring logging function. see [[defaultLogger]]
     */
-  lazy val devNull: String => Unit = (_: String) => {}
+  lazy val devNull: Logger = (_: String) => {}
 
   /**
     * A default logger, which can be *ahem* globally replaced if needed.
@@ -67,10 +73,10 @@ package object dockerenv {
     *   dockerenv.defaultLogger = dockerenv.stdOut
     * }}}
     */
-  var defaultLogger: String => Unit = devNull
+  var defaultLogger: Logger = devNull
 
   /**
-    * The default location under which scripts are extraxted
+    * The default location under which scripts are extracted
     */
   lazy val DefaultWorkDir = sys.env.getOrElse("DockerEnvWorkDir", "target/docker-env")
 

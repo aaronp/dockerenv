@@ -9,7 +9,8 @@ This repo also contains a collection of common scripts for using different conta
 As the primary use-case is really for testing, you will typically want to depend on the test-artifact like this:
 
 ```scala
-libraryDependencies += "com.github.aaronp" %% "dockerenv" % "{version}" classifier "tests"
+libraryDependencies += "com.github.aaronp" %% "dockerenv" % "latest version" % "test" classifier "tests"
+libraryDependencies += "com.github.aaronp" %% "dockerenv" % "latest version" % "test" 
 ``` 
 
 
@@ -22,39 +23,35 @@ assuming a project layout where 'Main' is an application which talks to mongo:
 You could create a 'DevMain' to as a convenience to run your app stand-alone:
 
 ```scala
-package myapp
 object DevMain {
-
   def main(args :Array[Sring]) : Unit = {
 
      // make sure mongo is running while my app is:
-     dockerenv.DockerEnv("scripts/mongo").bracket {
-         // myapp.Main is an app on top of e.g. mongo (or a number of services)
-         myapp.Main(args)
-     }
+      dockerenv.postgres().bracket { // the postgres DB is started here if it wasn't already running
+        dockerenv.mysql().bracket { 
+          // both postgres and mysql DB is started here if it wasn't already running
+        }
+        // mysql has been stopped, unless it was running
+      }
   }
 }
 
 
 ```
 
-Otherwise you would typically do this in tests themselves. e.g. perhaps setup a base test setup for tests which require kafka:
-```scala
-abstract class BaseKafkaSpec extends BaseDockerSpec("scripts/kafka")
-```
+Otherwise you would typically do this in tests themselves. There are 'BaseXXXSpec' abstract classes for the supported
+docker services which you can extend (e.g. see BaseKafkaSpec, BaseMongoSpec, BaseMySqlSpec, etc)
 
-And then write tests which extend that. e.g.:
+We can then write tests like this:
 
 ```scala
 class KafkaTest extends BaseKafkaSpec {
 
   "Kafka" should {
-    "run" in insideRunningEnvironment {
+    "run" in {
       isDockerRunning() shouldBe true
-      val topic = randomString()
 
-      val Success((0, createOutput)) = dockerEnv.runInScriptDir("createTopic.sh", topic)
-      val Success((0, listOutput)) = dockerEnv.runInScriptDir("listTopics.sh")
+      val Success((0, listOutput)) = dockerHandle.runInScriptDir("listTopics.sh")
       listOutput should include(topic)
     }
   }

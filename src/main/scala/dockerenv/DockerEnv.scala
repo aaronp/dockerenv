@@ -2,9 +2,9 @@ package dockerenv
 
 import java.nio.file.{Files, Paths}
 
-import scala.collection.mutable.ArrayBuffer
+import dockerenv.logging.BufferLogger
+
 import scala.sys.process
-import scala.sys.process.ProcessLogger
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -54,28 +54,35 @@ object DockerEnv {
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a kafka environment
     */
-  def kafka(workDir: String = DefaultWorkDir) = apply("scripts/kafka")
+  def kafka(workDir: String = DefaultWorkDir) = dockerenv.kafka(workDir)
 
   /** Convenience method for returning orientdb services
     *
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a orientdb environment
     */
-  def orientDb(workDir: String = DefaultWorkDir) = apply("scripts/orientdb")
+  def orientDb(workDir: String = DefaultWorkDir) = dockerenv.orientdb(workDir)
 
   /** Convenience method for returning mongo services
     *
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a mongo environment
     */
-  def mongo(workDir: String = DefaultWorkDir) = apply("scripts/mongo")
+  def mongo(workDir: String = DefaultWorkDir) = dockerenv.mongo(workDir)
 
   /** Convenience method for returning postgres services
     *
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a mongo environment
     */
-  def postgres(workDir: String = DefaultWorkDir) = apply("scripts/postgres")
+  def postgres(workDir: String = DefaultWorkDir) = dockerenv.postgres(workDir)
+
+  /** Convenience method for returning postgres services
+    *
+    * @param workDir the directory under which the docker run scripts should be extracted
+    * @return a mongo environment
+    */
+  def mysql(workDir: String = DefaultWorkDir): Instance = dockerenv.mysql(workDir)
 
   /**
     * Creates a 'DockerEnv' for the given script location (e.g. 'scripts/kafka').
@@ -86,33 +93,28 @@ object DockerEnv {
     * @param workDir   the local working directory to extract the files to
     * @return a new DockerEnv instance
     */
-  def apply(scriptDir: String, workDir: String = DefaultWorkDir) = {
-    dockerenv.envFor(scriptDir, workDir)
+  def apply(scriptDir: String, workDir: String = DefaultWorkDir, logger: Logger = defaultLogger) = {
+    dockerenv.envFor(scriptDir, workDir, logger)
   }
 
-  private[dockerenv] def newInstance(scriptDir: String): Instance = {
-    new Instance(scriptDir, Map.empty, defaultLogger)
+  private[dockerenv] def newInstance(scriptDir: String, logger: Logger): Instance = {
+    new Instance(scriptDir, Map.empty, logger)
   }
 
-  class Instance(scriptDir: String, extraEnv: Map[String, String], scriptLogger: String => Unit) extends DockerEnv {
+  final case class Instance(scriptDir: String, extraEnv: Map[String, String], scriptLogger: Logger) extends DockerEnv {
+
     override def isRunning(): Boolean = {
-      tryRunScript(s"$scriptDir/isDockerRunning.sh").toOption.exists {
+      runInScriptDir("isDockerRunning.sh").toOption.exists {
         case (_, output) =>
           output.contains("docker image ") && output.contains(" is running")
       }
     }
 
-    def withLogger(stdOut: String => Unit): Instance = {
-      new Instance(scriptDir, extraEnv, stdOut)
-    }
+    def withLogger(logger : Logger) = copy(scriptLogger = logger)
 
-    def withEnv(env: Map[String, String]): Instance = {
-      new Instance(scriptDir, extraEnv ++ env, scriptLogger)
-    }
+    def withEnv(env: Map[String, String]): Instance = copy(extraEnv = extraEnv ++ env)
 
-    def withEnv(first: (String, String), env: (String, String)*): Instance = {
-      withEnv((first +: env).toMap)
-    }
+    def withEnv(first: (String, String), env: (String, String)*): Instance = withEnv((first +: env).toMap)
 
     override def start(): Boolean = runInScriptDir("startDocker.sh").isSuccess
 
@@ -170,33 +172,4 @@ object DockerEnv {
 
     Process(fileName +: args, path.getParent.toFile, env.toSeq: _*)
   }
-
-  class BufferLogger(prefix: String) extends ProcessLogger {
-    private val outputBuffer = ArrayBuffer[String]()
-
-    def output = outputBuffer.mkString("\n")
-
-    override def out(s: => String): Unit = {
-      outputBuffer.append(s)
-    }
-
-    override def err(s: => String): Unit = {
-      outputBuffer.append(s"ERR: $s")
-    }
-
-    override def buffer[T](f: => T): T = f
-  }
-
-  case class ThunkLogger(onOut: String => Unit) extends ProcessLogger {
-    override def out(s: => String): Unit = {
-      onOut(s)
-    }
-
-    override def err(s: => String): Unit = {
-      onOut(s)
-    }
-
-    override def buffer[T](f: => T): T = f
-  }
-
 }
