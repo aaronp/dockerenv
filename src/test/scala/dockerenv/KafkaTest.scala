@@ -9,15 +9,15 @@ class KafkaTest extends BaseKafkaSpec {
     "allow us to control the mount-point via the 'PROJECT_DIR' env property" in {
       val dir    = "someDir"
       val output = ListBuffer[String]()
-      val e = dockerEnv.withEnv("PROJECT_DIR" -> dir).withLogger { out =>
-        output ++= out.lines
+      val e = dockerHandle.withEnv("PROJECT_DIR" -> dir).withLogger { out =>
+        output ++= out.linesIterator
       }
 
       e.stop()
       e.start()
       e.isRunning() shouldBe (true)
       val Some(projectDirIsLineFromTheIsDockerRunningScript) = output.find(_.contains("PROJECT_DIR is "))
-      projectDirIsLineFromTheIsDockerRunningScript.lines.toList.head shouldBe s"PROJECT_DIR is $dir"
+      KafkaTestAccessor.linesHead(projectDirIsLineFromTheIsDockerRunningScript) shouldBe s"PROJECT_DIR is $dir"
 
     }
   }
@@ -36,7 +36,7 @@ class KafkaTest extends BaseKafkaSpec {
       //
       //
 
-      val Success((0, listOutput)) = dockerEnv.runInScriptDir("listTopics.sh")
+      val Success((0, listOutput)) = dockerHandle.runInScriptDir("listTopics.sh")
       listOutput should include("topics for test-kafka are")
     }
   }

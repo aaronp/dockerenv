@@ -13,7 +13,7 @@ enablePlugins(BuildInfoPlugin)
 
 val scalaThirteen = "2.13.0"
 crossScalaVersions := Seq(scalaThirteen, "2.12.10")
-scalaVersion := scalaThirteen
+scalaVersion := "2.12.10"
 
 paradoxProperties += ("project.url" -> "https://aaronp.github.io/dockerenv/docs/current/")
 

@@ -2,9 +2,9 @@ package dockerenv
 
 import java.nio.file.{Files, Paths}
 
-import scala.collection.mutable.ArrayBuffer
+import dockerenv.logging.BufferLogger
+
 import scala.sys.process
-import scala.sys.process.ProcessLogger
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -177,33 +177,4 @@ object DockerEnv {
 
     Process(fileName +: args, path.getParent.toFile, env.toSeq: _*)
   }
-
-  class BufferLogger(prefix: String) extends ProcessLogger {
-    private val outputBuffer = ArrayBuffer[String]()
-
-    def output = outputBuffer.mkString("\n")
-
-    override def out(s: => String): Unit = {
-      outputBuffer.append(s)
-    }
-
-    override def err(s: => String): Unit = {
-      outputBuffer.append(s"ERR: $s")
-    }
-
-    override def buffer[T](f: => T): T = f
-  }
-
-  case class ThunkLogger(onOut: String => Unit) extends ProcessLogger {
-    override def out(s: => String): Unit = {
-      onOut(s)
-    }
-
-    override def err(s: => String): Unit = {
-      onOut(s)
-    }
-
-    override def buffer[T](f: => T): T = f
-  }
-
 }

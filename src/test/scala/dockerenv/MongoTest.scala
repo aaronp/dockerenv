@@ -9,15 +9,15 @@ class MongoTest extends BaseMongoSpec {
       isDockerRunning() shouldBe true
 
       val listOutput = eventually {
-        val Success((0, output)) = MongoEnv.listUsers(dockerEnv)
+        val Success((0, output)) = MongoEnv.listUsers(dockerHandle)
         output
       }
 
       if (!listOutput.contains("serviceUser")) {
-        val Success((0, createOutput)) = MongoEnv.createUser(dockerEnv)
+        val Success((0, createOutput)) = MongoEnv.createUser(dockerHandle)
         createOutput should include("serviceUser")
       } else {
-        val Success((0, secondListOutput)) = MongoEnv.listUsers(dockerEnv)
+        val Success((0, secondListOutput)) = MongoEnv.listUsers(dockerHandle)
         secondListOutput should include("serviceUser")
       }
     }
