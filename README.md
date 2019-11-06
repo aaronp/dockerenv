@@ -9,3 +9,23 @@ dockerenv
 A lightweight means of starting/stopping external services (docker images) to facilitate testing/development.
 
 See docs [here](https://aaronp.github.io/dockerenv/index.html)
+
+The gist is that we can easily spin up real services (databases, kafka clusters, etc) which we can then connect against.
+
+e.g. Import docker env in your build like this:
+
+```scala
+libraryDependencies += "com.github.aaronp" %% "dockerenv" % "latest version" % "test" classifier "tests"
+libraryDependencies += "com.github.aaronp" %% "dockerenv" % "latest version" % "test" 
+```
+
+Then use it like this:
+
+```scala
+      dockerenv.postgres().bracket { // the postgres DB is started here if it wasn't already running
+        dockerenv.mysql().bracket { 
+          // both postgres and mysql DB is started here if it wasn't already running
+        }
+        // mysql has been stopped, unless it was running
+      }
+```

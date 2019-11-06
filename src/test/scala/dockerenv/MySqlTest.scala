@@ -13,6 +13,13 @@ class MySqlTest extends BaseMySqlSpec {
     "be able to create a database" in {
       implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
 
+      dockerenv.postgres().bracket { // the postgres DB is started here if it wasn't already running
+        dockerenv.mysql().bracket {
+          // both postgres and mysql DB is started here if it wasn't already running
+        }
+        // mysql has been stopped, unless it was running
+      }
+
       val name = s"testDb${System.currentTimeMillis()}"
       isDockerRunning() shouldBe true
 
