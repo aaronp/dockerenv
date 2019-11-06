@@ -54,28 +54,35 @@ object DockerEnv {
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a kafka environment
     */
-  def kafka(workDir: String = DefaultWorkDir) = apply("scripts/kafka")
+  def kafka(workDir: String = DefaultWorkDir) = dockerenv.kafka(workDir)
 
   /** Convenience method for returning orientdb services
     *
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a orientdb environment
     */
-  def orientDb(workDir: String = DefaultWorkDir) = apply("scripts/orientdb")
+  def orientDb(workDir: String = DefaultWorkDir) = dockerenv.orientdb(workDir)
 
   /** Convenience method for returning mongo services
     *
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a mongo environment
     */
-  def mongo(workDir: String = DefaultWorkDir) = apply("scripts/mongo")
+  def mongo(workDir: String = DefaultWorkDir) = dockerenv.mongo(workDir)
 
   /** Convenience method for returning postgres services
     *
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a mongo environment
     */
-  def postgres(workDir: String = DefaultWorkDir) = apply("scripts/postgres")
+  def postgres(workDir: String = DefaultWorkDir) = dockerenv.postgres(workDir)
+
+  /** Convenience method for returning postgres services
+    *
+    * @param workDir the directory under which the docker run scripts should be extracted
+    * @return a mongo environment
+    */
+  def mysql(workDir: String = DefaultWorkDir) = dockerenv.mysql(workDir)
 
   /**
     * Creates a 'DockerEnv' for the given script location (e.g. 'scripts/kafka').

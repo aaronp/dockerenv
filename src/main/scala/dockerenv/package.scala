@@ -14,6 +14,10 @@ package object dockerenv {
     }
   }
 
+  def mysql(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/mysql", workDir)
+
+  def postgres(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/postgres", workDir)
+
   def kafka(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/kafka", workDir)
 
   def mongo(workDir: String = DefaultWorkDir): DockerEnv.Instance = envFor("scripts/mongo", workDir)
