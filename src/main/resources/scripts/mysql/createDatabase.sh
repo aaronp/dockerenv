@@ -2,4 +2,4 @@
 
 source dockerFunctions.sh
 
-docker exec -t ${IMAGE_NAME} /orientdb/bin/console.sh CREATE DATABASE remote:localhost/test root rootpwd PLOCAL
+docker exec -t "${IMAGE_NAME}" mysql -u root --password=docker -e "SHOW DATABASES;"

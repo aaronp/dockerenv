@@ -7,8 +7,8 @@
 # see https://hub.docker.com/_/mysql
 export VOLUME_NAME=${VOLUME_NAME:-mysql-data}
 export BACKUP_VOLUME_NAME=${VOLUME_NAME:-mysql-data-backup}
-export IMAGE_NAME=${IMAGE_NAME:-dockerenv-mysql}
-export MYSQL_PORT=${MYSQL_PORT:-9020}
+export IMAGE_NAME=${IMAGE_NAME:-dockerenvMysql}
+export MYSQL_PORT=${MYSQL_PORT:-3306}
 
 # see https://docs.docker.com/storage/volumes/
 createVolume () {
@@ -39,9 +39,10 @@ dockerRunMySql () {
     mkdir -p "$MYSQL_DATA_DIR"
     echo "starting mysql w/ mysql_DATA_DIR set to $MYSQL_DATA_DIR"
 
-    MYSQL_CMD="docker run --rm --name $IMAGE_NAME -p 5432:5432 -e MYSQL_PASSWORD=docker -v $(pwd):/var/lib/mysqlql/data -v ${VOLUME_NAME}:/mysql/databases -v ${BACKUP_VOLUME_NAME}:/mysql/backup -d mysql"
+# -v ${VOLUME_NAME}:/var/lib/mysql -v ${BACKUP_VOLUME_NAME}:/var/lib/mysql/backup
+    MYSQL_CMD="docker run --rm --name $IMAGE_NAME -p $MYSQL_PORT:$MYSQL_PORT -e MYSQL_ROOT_PASSWORD=docker  -d mysql:8.0.18"
 
-    echo "Running $MYSQL_CMD"
+    echo "Running '$MYSQL_CMD'"
     exec ${MYSQL_CMD}
 }
 

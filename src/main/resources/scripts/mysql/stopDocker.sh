@@ -2,4 +2,4 @@
 
 source dockerFunctions.sh
 
-stopPostgres
+stopMySql
