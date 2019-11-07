@@ -5,7 +5,7 @@ import org.scalatest.time.{Millis, Seconds, Span}
 import scala.concurrent.duration._
 import scala.util.{Success, Try}
 
-abstract class BaseMySqlSpec extends BaseDockerSpec(DockerEnv.mysql().withLogger(stdOut)) {
+abstract class BaseMySqlSpec extends BaseDockerSpec(DockerEnv.mysql()) {
 
   // wow - mysql fails to connect for AGES with:
   // "ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)"

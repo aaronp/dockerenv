@@ -30,14 +30,15 @@ class KafkaTest extends BaseKafkaSpec {
       // Replication factor: 1 larger than available brokers: 0
       //
       // So there may be some work there. But for now we just want to be sure kafka is at least running
-      //
-      //      val topic = randomString()
-      //      val Success((0, createOutput)) = dockerEnv.runInScriptDir("createTopic.sh", topic)
-      //
-      //
+      val topic = randomString()
+      eventually {
+        val Success((0, createOutput)) = dockerHandle.runInScriptDir("createTopic.sh", topic)
+        createOutput should include(s"Creating topic '$topic' in test-kafka")
+      }
 
       val Success((0, listOutput)) = dockerHandle.runInScriptDir("listTopics.sh")
       listOutput should include("topics for test-kafka are")
+      listOutput should include(topic)
     }
   }
 }
