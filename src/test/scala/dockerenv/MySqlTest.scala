@@ -5,9 +5,14 @@ import doobie.implicits._
 import doobie.util.transactor.Transactor
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration._
 import scala.util.Success
 
 class MySqlTest extends BaseMySqlSpec {
+
+  // wow - mysql fails to connect for AGES with:
+  // "ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)"
+  override def testTimeout: FiniteDuration = 2.minutes
 
   "dockerenv.createDatabase" should {
     "be able to create a database" in {
