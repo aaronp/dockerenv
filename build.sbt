@@ -20,7 +20,6 @@ paradoxProperties += ("project.url" -> "https://aaronp.github.io/dockerenv/docs/
 Compile / paradoxMaterialTheme ~= {
   _.withLanguage(java.util.Locale.ENGLISH)
     .withColor("red", "orange")
-    .withLogoIcon("cloud")
     .withRepository(uri("https://github.com/aaronp/dockerenv"))
     .withSocial(uri("https://github.com/aaronp"))
     .withoutSearch()
