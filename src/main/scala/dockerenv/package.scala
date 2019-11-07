@@ -16,19 +16,19 @@ package object dockerenv {
 
   type Logger = String => Unit
 
-  def mysql(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mysql", workDir, logger)
+  def mysql(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mysql", workDir, logger)
 
-  def postgres(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/postgres", workDir, logger)
+  def postgres(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/postgres", workDir, logger)
 
-  def kafka(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/kafka", workDir, logger)
+  def kafka(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/kafka", workDir, logger)
 
-  def mongo(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mongo", workDir, logger)
+  def mongo(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mongo", workDir, logger)
 
-  def mqtt(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mqtt", workDir, logger)
+  def mqtt(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mqtt", workDir, logger)
 
-  def orientdb(workDir: String = DefaultWorkDir, logger :Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/orientdb", workDir, logger)
+  def orientdb(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/orientdb", workDir, logger)
 
-  def envFor(scriptDir: String, workDir: String, logger : Logger): DockerEnv.Instance = {
+  def envFor(scriptDir: String, workDir: String, logger: Logger): DockerEnv.Instance = {
 
     val scriptWeCanAssumeIsThere = s"$scriptDir/isDockerRunning.sh"
     val JarPath                  = ("jar:file:(.*)!/" + scriptWeCanAssumeIsThere).r

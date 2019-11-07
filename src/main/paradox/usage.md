@@ -1,64 +1,58 @@
 ## Usage
 
-The goal is to ensure some docker service is running/available, typically for running tests.
+dockerenv is just a thin script wrapper which can ensure some docker container is started/stopped, typically to support real integration testing rather than
+having to mock things out.
 
-The main published resource is just the 'DockerEnv' trait, which provides a hook to start, stop and check running containers.
-
-This repo also contains a collection of common scripts for using different containers (mongo, kafka, orientdb, etc).
-
-As the primary use-case is really for testing, you will typically want to depend on the test-artifact like this:
+As the primary use-case is really for testing, you may want to include a dependency on the "test" artifact as well as the main one:
 
 ```scala
 libraryDependencies += "com.github.aaronp" %% "dockerenv" % "latest version" % "test" classifier "tests"
 libraryDependencies += "com.github.aaronp" %% "dockerenv" % "latest version" % "test" 
 ``` 
 
-
-You could also use this for running example applications like this:
-
-assuming a project layout where 'Main' is an application which talks to mongo: 
- * src/main/scala/myapp/Main.scala 
- * src/test/scala/myapp/DevMain.scala
  
-You could create a 'DevMain' to as a convenience to run your app stand-alone:
+In doing so this gives you access to the 'BaseXXXSpec' traits (e.g. BaseKafkaSpec) which ensures that kafka is started/stopped for those tests:
 
 ```scala
-object DevMain {
-  def main(args :Array[Sring]) : Unit = {
-
-     // make sure mongo is running while my app is:
-      dockerenv.postgres().bracket { // the postgres DB is started here if it wasn't already running
-        dockerenv.mysql().bracket { 
-          // both postgres and mysql DB is started here if it wasn't already running
-        }
-        // mysql has been stopped, unless it was running
-      }
-  }
-}
-
-
-```
-
-Otherwise you would typically do this in tests themselves. There are 'BaseXXXSpec' abstract classes for the supported
-docker services which you can extend (e.g. see BaseKafkaSpec, BaseMongoSpec, BaseMySqlSpec, etc)
-
-We can then write tests like this:
-
-```scala
-class KafkaTest extends BaseKafkaSpec {
+class MyKafkaTest extends BaseKafkaSpec {
 
   "Kafka" should {
-    "run" in {
+    "connect to a running kafka instance" in {
       isDockerRunning() shouldBe true
+ 
+      val topic = "testTopic"
+  
 
+      // insert your code here which needs to do something with kafka (e.g. publish/consume some data)
+      // here we just execute a script within the kafka container to demonstrate it's running by invoking 
+      // 'kafka-topics.sh' script within the container via our listTopics.sh wrapper 
       val Success((0, listOutput)) = dockerHandle.runInScriptDir("listTopics.sh")
-      listOutput should include(topic)
+      listOutput should not be(empty)
     }
   }
 }
-
 ```
 
-NOTE: As we're starting/stopping external resources, you will want to ensure these sorts of tests are NOT run in parallel!
+### NOTE: 
+As we're starting/stopping external resources, you will want to ensure these sorts of tests are NOT run in parallel!
 
 You could tag them as integration tests, or just put your integration tests in a separate test module.
+
+You don't need to use those ScalaTest convenience wrappers, however. Just depending on dockerenv gives you access to the currently
+supported containers. You could for example run a db migration application locally like this: 
+
+```scala
+// get the 'mysql' implementation which logs the script output to standard out:
+val mysql = dockerEnv.mysql().withLogger(dockerEnv.stdOut)
+
+// ensure mysql is running in this scope:
+mysql.bracket { 
+  // mysql is running here. If it was already running then this has no effect - if it wasn't then mysql was started and 
+  // will be stopped outside of this scope 
+  
+  dockerEnv.postgres().bracket {
+    // we now have both mysql and postgres database running. We could invoke now run our app here - 
+    // perhaps some DB migration code for instance.
+  }
+}
+```

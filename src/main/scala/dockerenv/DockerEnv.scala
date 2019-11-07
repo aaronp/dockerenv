@@ -110,7 +110,7 @@ object DockerEnv {
       }
     }
 
-    def withLogger(logger : Logger) = copy(scriptLogger = logger)
+    def withLogger(logger: Logger) = copy(scriptLogger = logger)
 
     def withEnv(env: Map[String, String]): Instance = copy(extraEnv = extraEnv ++ env)
 
