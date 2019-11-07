@@ -82,7 +82,7 @@ object DockerEnv {
     * @param workDir the directory under which the docker run scripts should be extracted
     * @return a mongo environment
     */
-  def mysql(workDir: String = DefaultWorkDir) = dockerenv.mysql(workDir)
+  def mysql(workDir: String = DefaultWorkDir): Instance = dockerenv.mysql(workDir)
 
   /**
     * Creates a 'DockerEnv' for the given script location (e.g. 'scripts/kafka').
@@ -93,33 +93,28 @@ object DockerEnv {
     * @param workDir   the local working directory to extract the files to
     * @return a new DockerEnv instance
     */
-  def apply(scriptDir: String, workDir: String = DefaultWorkDir) = {
-    dockerenv.envFor(scriptDir, workDir)
+  def apply(scriptDir: String, workDir: String = DefaultWorkDir, logger: Logger = defaultLogger) = {
+    dockerenv.envFor(scriptDir, workDir, logger)
   }
 
-  private[dockerenv] def newInstance(scriptDir: String): Instance = {
-    new Instance(scriptDir, Map.empty, defaultLogger)
+  private[dockerenv] def newInstance(scriptDir: String, logger: Logger): Instance = {
+    new Instance(scriptDir, Map.empty, logger)
   }
 
-  class Instance(scriptDir: String, extraEnv: Map[String, String], scriptLogger: String => Unit) extends DockerEnv {
+  final case class Instance(scriptDir: String, extraEnv: Map[String, String], scriptLogger: Logger) extends DockerEnv {
+
     override def isRunning(): Boolean = {
-      tryRunScript(s"$scriptDir/isDockerRunning.sh").toOption.exists {
+      runInScriptDir("isDockerRunning.sh").toOption.exists {
         case (_, output) =>
           output.contains("docker image ") && output.contains(" is running")
       }
     }
 
-    def withLogger(stdOut: String => Unit): Instance = {
-      new Instance(scriptDir, extraEnv, stdOut)
-    }
+    def withLogger(logger : Logger) = copy(scriptLogger = logger)
 
-    def withEnv(env: Map[String, String]): Instance = {
-      new Instance(scriptDir, extraEnv ++ env, scriptLogger)
-    }
+    def withEnv(env: Map[String, String]): Instance = copy(extraEnv = extraEnv ++ env)
 
-    def withEnv(first: (String, String), env: (String, String)*): Instance = {
-      withEnv((first +: env).toMap)
-    }
+    def withEnv(first: (String, String), env: (String, String)*): Instance = withEnv((first +: env).toMap)
 
     override def start(): Boolean = runInScriptDir("startDocker.sh").isSuccess
 
