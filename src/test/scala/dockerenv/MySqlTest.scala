@@ -25,7 +25,7 @@ class MySqlTest extends BaseMySqlSpec {
 
       val xa = Transactor.fromDriverManager[IO](
         "com.mysql.cj.jdbc.Driver",
-        s"jdbc:mysql://localhost:3306/$name?useSSL=false&allowPublicKeyRetrieval=true",
+        s"jdbc:mysql://localhost:7777/$name?useSSL=false&allowPublicKeyRetrieval=true",
         "root",
         "docker"
       )
