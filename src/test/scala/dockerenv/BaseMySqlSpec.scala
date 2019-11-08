@@ -2,7 +2,6 @@ package dockerenv
 
 import org.scalatest.time.{Millis, Seconds, Span}
 
-import scala.concurrent.duration._
 import scala.util.{Success, Try}
 
 abstract class BaseMySqlSpec extends BaseDockerSpec(DockerEnv.mysql()) {
@@ -18,12 +17,18 @@ abstract class BaseMySqlSpec extends BaseDockerSpec(DockerEnv.mysql()) {
     dockerHandle.runInScriptDir("dropDatabase.sh", db)
   }
 
-  def listDatabases() = {
-    val out = eventually {
-      val Success((0, output)) = dockerHandle.runInScriptDir("showDatabases.sh")
-      output
-    }
+  def mysqlExec(query: String): Try[(Int, String)] = {
+    dockerHandle.runInScriptDir("mysqlExec.sh", query)
+  }
 
+  def listDatabases(): List[String] = {
+    eventually {
+      val Success((0, output)) = dockerHandle.runInScriptDir("showDatabases.sh")
+      parseAsciiOut(output)
+    }
+  }
+
+  private def parseAsciiOut(out: String) = {
     val DbNameR = """.*\| *(.*) *\|.*""".r
     val names = out.linesIterator.collect {
       case DbNameR(name) => name.trim
@@ -40,6 +45,16 @@ abstract class BaseMySqlSpec extends BaseDockerSpec(DockerEnv.mysql()) {
       * +--------------------+
       * }}}
       */
-    names.toSet - "Database"
+    val list = names.toList
+    println(list)
+    list.tail
+  }
+
+  def listTables(database: String): List[String] = {
+    eventually {
+      val query              = s"USE ${database}; SHOW TABLES;"
+      val Success((0, tbls)) = mysqlExec(query)
+      parseAsciiOut(tbls)
+    }
   }
 }

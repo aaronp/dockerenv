@@ -32,13 +32,10 @@ siteSourceDirectory := target.value / "paradox" / "site" / "main"
 siteSubdirName in SiteScaladoc := "api/latest"
 
 libraryDependencies ++= List(
-  "mysql"         % "mysql-connector-java" % "8.0.15"          % "test",
-  "postgresql"    % "postgresql"           % "9.1-901-1.jdbc4" % "test",
-  "org.tpolecat"  %% "doobie-core"         % "0.8.4"           % "test",
-  "org.scalactic" %% "scalactic"           % "3.0.8"           % "test",
-  "org.scalatest" %% "scalatest"           % "3.0.8"           % "test",
-  "org.pegdown"   % "pegdown"              % "1.6.0"           % "test",
-  "junit"         % "junit"                % "4.12"            % "test"
+  "org.scalactic" %% "scalactic" % "3.0.8" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test",
+  "org.pegdown"   % "pegdown"    % "1.6.0" % "test",
+  "junit"         % "junit"      % "4.12"  % "test"
 )
 
 publishMavenStyle := true

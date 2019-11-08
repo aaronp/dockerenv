@@ -1,10 +1,5 @@
 package dockerenv
 
-import cats.effect.{ContextShift, IO}
-import doobie.implicits._
-import doobie.util.transactor.Transactor
-
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.util.Success
 
@@ -16,7 +11,6 @@ class MySqlTest extends BaseMySqlSpec {
 
   "dockerenv.createDatabase" should {
     "be able to create a database" in {
-      implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
 
       val name = s"testDb${System.currentTimeMillis()}"
       isDockerRunning() shouldBe true
@@ -28,15 +22,8 @@ class MySqlTest extends BaseMySqlSpec {
 
       listDatabases() should contain(name)
 
-      val xa = Transactor.fromDriverManager[IO](
-        "com.mysql.cj.jdbc.Driver",
-        s"jdbc:mysql://localhost:7777/$name?useSSL=false&allowPublicKeyRetrieval=true",
-        "root",
-        "docker"
-      )
-
-      val io: doobie.ConnectionIO[Int] = sql"CREATE TABLE FOO(name VARCHAR(20))".update.run
-      io.transact(xa).unsafeRunSync shouldBe 0
+      val Success((0, _)) = mysqlExec(s"CREATE TABLE IF NOT EXISTS ${name}.FOO (SOME_ID VARCHAR(20) PRIMARY KEY, NAME VARCHAR(20) NULL)")
+      listTables(name) should contain only ("FOO")
 
       val Success((0, _)) = dropDatabase(name)
       listDatabases() should not contain (name)
