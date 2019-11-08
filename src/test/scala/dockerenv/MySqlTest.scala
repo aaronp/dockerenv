@@ -17,7 +17,7 @@ class MySqlTest extends BaseMySqlSpec {
 
       listDatabases() should contain allElementsOf List("mysql", "information_schema")
       listDatabases() should not contain (name)
-      val Success((0, msg)) = createDatabase(name)
+      val msg = createDatabase(name)
       msg should include(s"CREATING $name")
 
       listDatabases() should contain(name)
@@ -25,7 +25,7 @@ class MySqlTest extends BaseMySqlSpec {
       val Success((0, _)) = mysqlExec(s"CREATE TABLE IF NOT EXISTS ${name}.FOO (SOME_ID VARCHAR(20) PRIMARY KEY, NAME VARCHAR(20) NULL)")
       listTables(name) should contain only ("FOO")
 
-      val Success((0, _)) = dropDatabase(name)
+      dropDatabase(name)
       listDatabases() should not contain (name)
     }
   }
