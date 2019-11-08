@@ -9,12 +9,18 @@ abstract class BaseMySqlSpec extends BaseDockerSpec(DockerEnv.mysql()) {
   implicit override def patienceConfig =
     PatienceConfig(timeout = scaled(Span(testTimeout.toSeconds, Seconds)), interval = scaled(Span(500, Millis)))
 
-  def createDatabase(db: String): Try[(Int, String)] = {
-    dockerHandle.runInScriptDir("createDatabase.sh", db)
+  def createDatabase(db: String) = {
+    eventually {
+      val Success((0, out)) = dockerHandle.runInScriptDir("createDatabase.sh", db)
+      out
+    }
   }
 
-  def dropDatabase(db: String): Try[(Int, String)] = {
-    dockerHandle.runInScriptDir("dropDatabase.sh", db)
+  def dropDatabase(db: String) = {
+    eventually {
+      val Success((0, out)) = dockerHandle.runInScriptDir("dropDatabase.sh", db)
+      out
+    }
   }
 
   def mysqlExec(query: String): Try[(Int, String)] = {
@@ -46,7 +52,6 @@ abstract class BaseMySqlSpec extends BaseDockerSpec(DockerEnv.mysql()) {
       * }}}
       */
     val list = names.toList
-    println(list)
     list.tail
   }
 
