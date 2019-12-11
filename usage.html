@@ -165,20 +165,31 @@ aaronp/dockerenv
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h2><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h2>
-<p>dockerenv is just a thin script wrapper which can ensure some docker container is started/stopped, typically to support real integration testing rather than having to mock things out.</p>
+<p>dockerenv was created to expose a handle on common docker containers so they can easily be started/stopped in code.</p>
+<p>The typical use-case is to support real integration testing against real services rather than having to mock things out.</p>
+<p>The main project gives you a <a href="https://oss.sonatype.org/service/local/repositories/releases/archive/com/github/aaronp/dockerenv_2.12/0.4.3/dockerenv_2.12-0.4.3-javadoc.jar/!/dockerenv/DockerEnv.html">DockerEnv</a> interface for common containers (kafka, mysql, postgres, mongo, etc).</p>
+<p>With that you can do things like:</p>
+<pre class="prettyprint"><code class="language-scala">dockerenv.mysql().start() // start mysql
+dockerenv.mysql().stop() // stop mysql 
+dockerenv.mysql().bracket {
+  // start mysql if it wasn&#39;t already running, and stop it when this bracket closes if it was started 
+} 
+</code></pre>
 <p>As the primary use-case is really for testing, you may want to include a dependency on the &ldquo;test&rdquo; artifact as well as the main one:</p>
 <pre class="prettyprint"><code class="language-scala">libraryDependencies += &quot;com.github.aaronp&quot; %% &quot;dockerenv&quot; % &quot;latest version&quot; % &quot;test&quot; classifier &quot;tests&quot;
 libraryDependencies += &quot;com.github.aaronp&quot; %% &quot;dockerenv&quot; % &quot;latest version&quot; % &quot;test&quot; 
 </code></pre>
 <p>In doing so this gives you access to the &lsquo;BaseXXXSpec&rsquo; traits (e.g. BaseKafkaSpec) which ensures that kafka is started/stopped for those tests:</p>
-<pre class="prettyprint"><code class="language-scala">class MyKafkaTest extends BaseKafkaSpec {
+<pre class="prettyprint"><code class="language-scala">// the BaseXYZSpec classes ensure XYZ is started/stopped for your tests, and expose a &#39;dockerHandle&#39; should you need to 
+// stop the services for run more complex scenarios, like testing failover/retries  
+class MyKafkaTest extends BaseKafkaSpec {
 
   &quot;Kafka&quot; should {
     &quot;connect to a running kafka instance&quot; in {
+
       isDockerRunning() shouldBe true
  
       val topic = &quot;testTopic&quot;
-  
 
       // insert your code here which needs to do something with kafka (e.g. publish/consume some data)
       // here we just execute a script within the kafka container to demonstrate it&#39;s running by invoking 
@@ -192,19 +203,75 @@ libraryDependencies += &quot;com.github.aaronp&quot; %% &quot;dockerenv&quot; % 
 <h3><a href="#note-" name="note-" class="anchor"><span class="anchor-link"></span></a>NOTE:</h3>
 <p>As we&rsquo;re starting/stopping external resources, you will want to ensure these sorts of tests are NOT run in parallel!</p>
 <p>You could tag them as integration tests, or just put your integration tests in a separate test module.</p>
-<p>You don&rsquo;t need to use those ScalaTest convenience wrappers, however. Just depending on dockerenv gives you access to the currently supported containers. You could for example run a db migration application locally like this: </p>
-<pre class="prettyprint"><code class="language-scala">// get the &#39;mysql&#39; implementation which logs the script output to standard out:
-val mysql = dockerEnv.mysql().withLogger(dockerEnv.stdOut)
-
-// ensure mysql is running in this scope:
-mysql.bracket { 
-  // mysql is running here. If it was already running then this has no effect - if it wasn&#39;t then mysql was started and 
-  // will be stopped outside of this scope 
-  
-  dockerEnv.postgres().bracket {
-    // we now have both mysql and postgres database running. We could invoke now run our app here - 
-    // perhaps some DB migration code for instance.
+<p>You don&rsquo;t need to use those ScalaTest convenience wrappers, however. Just depending on dockerenv gives you access to the currently supported containers. You could for example run a DB migration application locally like this: </p>
+<pre class="prettyprint"><code class="language-scala">  println(step(&quot;Let&#39;s do some ETL! Starting Mysql...&quot;, 0))
+  dockerenv.mysql().bracket {
+    println(step(&quot;Mysql Started, Starting Kafka&quot;, 1))
+    dockerenv.kafka().bracket {
+      println(step(&quot;Kafka Started, Starting Mongo&quot;, 2))
+      dockerenv.mongo().bracket {
+        println(step(&quot;All up! Killing Mongo...&quot;, 3))
+      }
+      println(step(&quot;Mongo Down, Killing Kafka&quot;, 2))
+    }
+    println(step(&quot;Kafka Down, Killing Mysql&quot;, 1))
   }
+  println(step(&quot;All done!&quot;, 0))
+
+  // pretty-prints the message with the current &#39;docker ps&#39; status
+  private def step(msg: String, indent: Int): String = {
+    val status      = dockerPS
+    ...
+  }
+
+  def dockerPS: String = &quot;docker ps&quot;.!!
+</code></pre>
+<p>The output for which is:</p>
+<pre><code>_____________________________________________________________________________________________________________________________
+Let&#39;s do some ETL! Starting Mysql...
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+    ________________________________________________________________________________________________________________________________________________________________
+    Mysql Started, Starting Kafka
+    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                               NAMES
+    39d16d02b95c        mysql:8.0.18        &quot;docker-entrypoint.s…&quot;   1 second ago        Up Less than a second   33060/tcp, 0.0.0.0:7777-&gt;3306/tcp   dockerenv-mysql
+    
+        __________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+        Kafka Started, Starting Mongo
+        CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS                  PORTS                                                                                                                      NAMES
+        a6e9bea0393c        dockerenv-kafka:test   &quot;supervisord -n&quot;         1 second ago        Up Less than a second   0.0.0.0:2181-&gt;2181/tcp, 0.0.0.0:8083-&gt;8083/tcp, 0.0.0.0:9080-&gt;9080/tcp, 0.0.0.0:9092-&gt;9092/tcp, 0.0.0.0:29092-&gt;29092/tcp   test-kafka
+        39d16d02b95c        mysql:8.0.18           &quot;docker-entrypoint.s…&quot;   2 seconds ago       Up 1 second             33060/tcp, 0.0.0.0:7777-&gt;3306/tcp                                                                                          dockerenv-mysql
+        
+            __________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+            All up! Killing Mongo...
+            CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS                  PORTS                                                                                                                      NAMES
+            fef2d8c0662a        mongo:4.0              &quot;docker-entrypoint.s…&quot;   1 second ago        Up Less than a second   0.0.0.0:9010-&gt;27017/tcp                                                                                                    dockerenv-mongo
+            a6e9bea0393c        dockerenv-kafka:test   &quot;supervisord -n&quot;         2 seconds ago       Up 1 second             0.0.0.0:2181-&gt;2181/tcp, 0.0.0.0:8083-&gt;8083/tcp, 0.0.0.0:9080-&gt;9080/tcp, 0.0.0.0:9092-&gt;9092/tcp, 0.0.0.0:29092-&gt;29092/tcp   test-kafka
+            39d16d02b95c        mysql:8.0.18           &quot;docker-entrypoint.s…&quot;   3 seconds ago       Up 2 seconds            33060/tcp, 0.0.0.0:7777-&gt;3306/tcp                                                                                          dockerenv-mysql
+            
+        ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+        Mongo Down, Killing Kafka
+        CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                                                                                                      NAMES
+        a6e9bea0393c        dockerenv-kafka:test   &quot;supervisord -n&quot;         3 seconds ago       Up 1 second         0.0.0.0:2181-&gt;2181/tcp, 0.0.0.0:8083-&gt;8083/tcp, 0.0.0.0:9080-&gt;9080/tcp, 0.0.0.0:9092-&gt;9092/tcp, 0.0.0.0:29092-&gt;29092/tcp   test-kafka
+        39d16d02b95c        mysql:8.0.18           &quot;docker-entrypoint.s…&quot;   4 seconds ago       Up 3 seconds        33060/tcp, 0.0.0.0:7777-&gt;3306/tcp                                                                                          dockerenv-mysql
+        
+    ____________________________________________________________________________________________________________________________________________________________
+    Kafka Down, Killing Postgres
+    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                               NAMES
+    39d16d02b95c        mysql:8.0.18        &quot;docker-entrypoint.s…&quot;   6 seconds ago       Up 4 seconds        33060/tcp, 0.0.0.0:7777-&gt;3306/tcp   dockerenv-mysql
+    
+_____________________________________________________________________________________________________________________________
+All done!
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+</code></pre>
+<p>Under the hood this just issues CLI commands to docker, the output of which you can see by changing the script logging:</p>
+<pre class="prettyprint"><code class="language-scala"><br/>// get the &#39;mysql&#39; implementation which logs the script output to standard out:
+val mysql = dockerEnv.mysql().withLogger(dockerEnv.stdOut)
+mysql.start()
+mysql.stop()
+mysql.bracket {
+  // mysql is running here
 }
 </code></pre>
 </div>
