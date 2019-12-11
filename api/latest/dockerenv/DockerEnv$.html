@@ -127,6 +127,10 @@
                         <a href="MongoEnv$.html" title="">MongoEnv</a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
+                        <a class="class" href="MySql.html" title=""></a>
+                        <a href="MySql.html" title="">MySql</a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
                         <a class="object" href="package$$using$.html" title=""></a>
                         <a href="package$$using$.html" title="">using</a>
                       </li>
@@ -212,18 +216,18 @@
         <div id="types" class="types members">
               <h3>Type Members</h3>
               <ol><li name="dockerenv.DockerEnv.Instance" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="InstanceextendsDockerEnv"></a><a id="Instance:Instance"></a>
+      <a id="InstanceextendsDockerEnvwithProductwithSerializable"></a><a id="Instance:Instance"></a>
       <span class="permalink">
       <a href="../dockerenv/DockerEnv$$Instance.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="" href="DockerEnv$$Instance.html"><span class="name">Instance</span></a><span class="result"> extends <a href="DockerEnv.html" class="extype" name="dockerenv.DockerEnv">DockerEnv</a></span>
+        <a title="" href="DockerEnv$$Instance.html"><span class="name">Instance</span></a><span class="params">(<span name="scriptDir">scriptDir: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="extraEnv">extraEnv: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="scriptLogger">scriptLogger: <a href="index.html#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a></span>)</span><span class="result"> extends <a href="DockerEnv.html" class="extype" name="dockerenv.DockerEnv">DockerEnv</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
       
@@ -284,9 +288,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="dockerenv.DockerEnv#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(scriptDir:String,workDir:String):dockerenv.DockerEnv.Instance"></a><a id="apply(String,String):Instance"></a>
+      <a id="apply(scriptDir:String,workDir:String,logger:dockerenv.Logger):dockerenv.DockerEnv.Instance"></a><a id="apply(String,String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/DockerEnv$.html#apply(scriptDir:String,workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/DockerEnv$.html#apply(scriptDir:String,workDir:String,logger:dockerenv.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -295,7 +299,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="scriptDir">scriptDir: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="index.html#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">apply</span><span class="params">(<span name="scriptDir">scriptDir: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="index.html#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>, <span name="logger">logger: <a href="index.html#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a> = <span class="symbol"><span class="name"><a href="index.html#defaultLogger:dockerenv.package.Logger">defaultLogger</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       <p class="shortcomment cmt">Creates a 'DockerEnv' for the given script location (e.g.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a 'DockerEnv' for the given script location (e.g. 'scripts/kafka').</p><p>This will entail having to extract the scripts from the 'dockerenv' jar dependency under the 'workDir'
@@ -336,10 +340,6 @@
       
       <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
     </span>)</span>
-              
-                <span class="name">@native</span><span class="args">()</span>
-              
-                <span class="name">@HotSpotIntrinsicCandidate</span><span class="args">()</span>
               
         </dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -392,8 +392,6 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
                 <span class="name">@native</span><span class="args">()</span>
               
-                <span class="name">@HotSpotIntrinsicCandidate</span><span class="args">()</span>
-              
         </dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -410,12 +408,7 @@
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
-                <span class="name">@native</span><span class="args">()</span>
-              
-                <span class="name">@HotSpotIntrinsicCandidate</span><span class="args">()</span>
-              
-        </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -520,8 +513,6 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@native</span><span class="args">()</span>
               
-                <span class="name">@HotSpotIntrinsicCandidate</span><span class="args">()</span>
-              
         </dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -540,8 +531,6 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@native</span><span class="args">()</span>
-              
-                <span class="name">@HotSpotIntrinsicCandidate</span><span class="args">()</span>
               
         </dd></dl></div>
     </li><li name="dockerenv.DockerEnv#orientDb" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -666,6 +655,8 @@
       <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
     </span>)</span>
               
+                <span class="name">@native</span><span class="args">()</span>
+              
         </dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
@@ -687,8 +678,6 @@
       
       <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
     </span>)</span>
-              
-                <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">

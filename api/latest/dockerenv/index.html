@@ -127,6 +127,10 @@
                         <a href="MongoEnv$.html" title="">MongoEnv</a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
+                        <a class="class" href="MySql.html" title=""></a>
+                        <a href="MySql.html" title="">MySql</a>
+                      </li><li class="current-entities indented1">
+                        <span class="separator"></span>
                         <a class="object" href="package$$using$.html" title=""></a>
                         <a href="package$$using$.html" title="">using</a>
                       </li>
@@ -226,6 +230,38 @@
       
       <p class="shortcomment cmt">The 'DockerEnv' represents a handle onto environment scripts which can be started, stopped and checked to see if
 they're running.</p>
+    </li><li name="dockerenv.Logger" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Logger=String=&gt;Unit"></a><a id="Logger:Logger"></a>
+      <span class="permalink">
+      <a href="../dockerenv/index.html#Logger=String=&gt;Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Logger</span><span class="result alias"> = (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      
+    </li><li name="dockerenv.MySql" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MySqlextendsProductwithSerializable"></a><a id="MySql:MySql"></a>
+      <span class="permalink">
+      <a href="../dockerenv/MySql.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="MySql.html"><span class="name">MySql</span></a><span class="params">(<span name="dockerHandle">dockerHandle: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
     </li></ol>
             </div>
 
@@ -249,12 +285,12 @@ they're running.</p>
         <span class="name">DefaultWorkDir</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
-      <p class="shortcomment cmt">The default location under which scripts are extraxted
+      <p class="shortcomment cmt">The default location under which scripts are extracted
 </p>
     </li><li name="dockerenv#defaultLogger" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="defaultLogger:String=&gt;Unit"></a><a id="defaultLogger:(String)⇒Unit"></a>
+      <a id="defaultLogger:dockerenv.package.Logger"></a><a id="defaultLogger:Logger"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#defaultLogger:String=&gt;Unit" title="Permalink">
+      <a href="../dockerenv/index.html#defaultLogger:dockerenv.package.Logger" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -263,14 +299,14 @@ they're running.</p>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">defaultLogger</span><span class="result">: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">defaultLogger</span><span class="result">: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a></span>
       </span>
       
       <p class="shortcomment cmt">A default logger, which can be *ahem* globally replaced if needed.</p><div class="fullcomment"><div class="comment cmt"><p>A default logger, which can be *ahem* globally replaced if needed.</p><p>I didn't want to bind any additional dependencies to this project, including loggers, even slf4j ones.</p><p>You could explicitly pass a logging function to a dockerenv.* function, or set the global default:</p><pre>dockerenv.defaultLogger = dockerenv.stdOut</pre></div></div>
     </li><li name="dockerenv#devNull" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="devNull:String=&gt;Unit"></a><a id="devNull:(String)⇒Unit"></a>
+      <a id="devNull:dockerenv.package.Logger"></a><a id="devNull:Logger"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#devNull:String=&gt;Unit" title="Permalink">
+      <a href="../dockerenv/index.html#devNull:dockerenv.package.Logger" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -279,15 +315,15 @@ they're running.</p>
         <span class="kind">lazy val</span>
       </span>
       <span class="symbol">
-        <span class="name">devNull</span><span class="result">: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">devNull</span><span class="result">: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a></span>
       </span>
       
-      <p class="shortcomment cmt">An ignoring logging function.</p><div class="fullcomment"><div class="comment cmt"><p>An ignoring logging function. see <a href="#defaultLogger:String=&gt;Unit" class="extmbr" name="dockerenv#defaultLogger">defaultLogger</a>
+      <p class="shortcomment cmt">An ignoring logging function.</p><div class="fullcomment"><div class="comment cmt"><p>An ignoring logging function. see <a href="#defaultLogger:dockerenv.package.Logger" class="extmbr" name="dockerenv#defaultLogger">defaultLogger</a>
 </p></div></div>
     </li><li name="dockerenv#envFor" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="envFor(scriptDir:String,workDir:String):dockerenv.DockerEnv.Instance"></a><a id="envFor(String,String):Instance"></a>
+      <a id="envFor(scriptDir:String,workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance"></a><a id="envFor(String,String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#envFor(scriptDir:String,workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/index.html#envFor(scriptDir:String,workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -296,7 +332,7 @@ they're running.</p>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">envFor</span><span class="params">(<span name="scriptDir">scriptDir: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">envFor</span><span class="params">(<span name="scriptDir">scriptDir: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="logger">logger: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       
@@ -323,9 +359,9 @@ so this script explodes the resource artifacts from that jar into the 'toDir' lo
 or something)
 </p></div><dl class="paramcmts block"><dt class="param">fromPath</dt><dd class="cmt"><p>the path to the jar artifact</p></dd><dt class="param">toDir</dt><dd class="cmt"><p>the local destination directory</p></dd><dt>returns</dt><dd class="cmt"><p>the extracted location (same as the 'toDir')</p></dd></dl></div>
     </li><li name="dockerenv#kafka" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="kafka(workDir:String):dockerenv.DockerEnv.Instance"></a><a id="kafka(String):Instance"></a>
+      <a id="kafka(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance"></a><a id="kafka(String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#kafka(workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/index.html#kafka(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -334,14 +370,14 @@ or something)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">kafka</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">kafka</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>, <span name="logger">logger: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a> = <span class="symbol"><span class="name"><a href="#defaultLogger:dockerenv.package.Logger">defaultLogger</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       
     </li><li name="dockerenv#mongo" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="mongo(workDir:String):dockerenv.DockerEnv.Instance"></a><a id="mongo(String):Instance"></a>
+      <a id="mongo(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance"></a><a id="mongo(String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#mongo(workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/index.html#mongo(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -350,14 +386,14 @@ or something)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mongo</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">mongo</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>, <span name="logger">logger: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a> = <span class="symbol"><span class="name"><a href="#defaultLogger:dockerenv.package.Logger">defaultLogger</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       
     </li><li name="dockerenv#mqtt" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="mqtt(workDir:String):dockerenv.DockerEnv.Instance"></a><a id="mqtt(String):Instance"></a>
+      <a id="mqtt(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance"></a><a id="mqtt(String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#mqtt(workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/index.html#mqtt(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -366,14 +402,14 @@ or something)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mqtt</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">mqtt</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>, <span name="logger">logger: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a> = <span class="symbol"><span class="name"><a href="#defaultLogger:dockerenv.package.Logger">defaultLogger</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       
     </li><li name="dockerenv#mysql" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="mysql(workDir:String):dockerenv.DockerEnv.Instance"></a><a id="mysql(String):Instance"></a>
+      <a id="mysql(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance"></a><a id="mysql(String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#mysql(workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/index.html#mysql(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -382,14 +418,14 @@ or something)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mysql</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">mysql</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>, <span name="logger">logger: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a> = <span class="symbol"><span class="name"><a href="#defaultLogger:dockerenv.package.Logger">defaultLogger</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       
     </li><li name="dockerenv#orientdb" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="orientdb(workDir:String):dockerenv.DockerEnv.Instance"></a><a id="orientdb(String):Instance"></a>
+      <a id="orientdb(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance"></a><a id="orientdb(String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#orientdb(workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/index.html#orientdb(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -398,14 +434,14 @@ or something)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">orientdb</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">orientdb</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>, <span name="logger">logger: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a> = <span class="symbol"><span class="name"><a href="#defaultLogger:dockerenv.package.Logger">defaultLogger</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       
     </li><li name="dockerenv#postgres" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="postgres(workDir:String):dockerenv.DockerEnv.Instance"></a><a id="postgres(String):Instance"></a>
+      <a id="postgres(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance"></a><a id="postgres(String,Logger):Instance"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#postgres(workDir:String):dockerenv.DockerEnv.Instance" title="Permalink">
+      <a href="../dockerenv/index.html#postgres(workDir:String,logger:dockerenv.package.Logger):dockerenv.DockerEnv.Instance" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -414,14 +450,14 @@ or something)
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">postgres</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
+        <span class="name">postgres</span><span class="params">(<span name="workDir">workDir: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol"><span class="name"><a href="#DefaultWorkDir:String">DefaultWorkDir</a></span></span></span>, <span name="logger">logger: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a> = <span class="symbol"><span class="name"><a href="#defaultLogger:dockerenv.package.Logger">defaultLogger</a></span></span></span>)</span><span class="result">: <a href="DockerEnv$$Instance.html" class="extype" name="dockerenv.DockerEnv.Instance">Instance</a></span>
       </span>
       
       
     </li><li name="dockerenv#stdOut" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stdOut:String=&gt;Unit"></a><a id="stdOut:(String)⇒Unit"></a>
+      <a id="stdOut:dockerenv.package.Logger"></a><a id="stdOut:Logger"></a>
       <span class="permalink">
-      <a href="../dockerenv/index.html#stdOut:String=&gt;Unit" title="Permalink">
+      <a href="../dockerenv/index.html#stdOut:dockerenv.package.Logger" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -430,10 +466,10 @@ or something)
         <span class="kind">lazy val</span>
       </span>
       <span class="symbol">
-        <span class="name">stdOut</span><span class="result">: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">stdOut</span><span class="result">: <a href="#Logger=String=&gt;Unit" class="extmbr" name="dockerenv.Logger">Logger</a></span>
       </span>
       
-      <p class="shortcomment cmt">log to std output.</p><div class="fullcomment"><div class="comment cmt"><p>log to std output. see <a href="#defaultLogger:String=&gt;Unit" class="extmbr" name="dockerenv#defaultLogger">defaultLogger</a>
+      <p class="shortcomment cmt">log to std output.</p><div class="fullcomment"><div class="comment cmt"><p>log to std output. see <a href="#defaultLogger:dockerenv.package.Logger" class="extmbr" name="dockerenv#defaultLogger">defaultLogger</a>
 </p></div></div>
     </li><li name="dockerenv.DockerEnv" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DockerEnv"></a><a id="DockerEnv:DockerEnv"></a>

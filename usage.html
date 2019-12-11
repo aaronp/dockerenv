@@ -48,7 +48,7 @@ data-md-color-accent="orange"
 <div class="md-flex">
 <div class="md-flex__cell md-flex__cell--shrink">
 <a href="index.html" title="DockerEnv" class="md-header-nav__button md-logo">
-<i class="md-icon">cloud</i>
+<i class="md-icon">local_library</i>
 </a>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
@@ -97,7 +97,7 @@ aaronp/dockerenv
 <label class="md-nav__title md-nav__title--site" for="drawer">
 <a href="index.html" title="DockerEnv" class="md-nav__button md-logo">
 <span class="md-nav__button md-logo">
-<i class="md-icon">cloud</i>
+<i class="md-icon">local_library</i>
 </a>
 <a href="index.html" title="DockerEnv">
 DockerEnv
@@ -125,16 +125,39 @@ aaronp/dockerenv
   <li><a href="license.html" class="page">License</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="usage.html#usage" class="header">Usage</a>
+  <ul>
+    <li><a href="usage.html#note-" class="header">NOTE:</a></li>
+  </ul></li>
+</ul>
 </nav>
 
 </nav>
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 0.3.2*
+<i class="md-icon" title="Version">label_outline</i> 0.4.4*
 </label>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="usage.html#usage" class="header">Usage</a>
+  <ul>
+    <li><a href="usage.html#note-" class="header">NOTE:</a></li>
+  </ul></li>
+</ul>
+</nav>
+
 </div>
 </div>
 </div>
@@ -142,48 +165,48 @@ aaronp/dockerenv
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h2><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h2>
-<p>The goal is to ensure some docker service is running/available, typically for running tests.</p>
-<p>The main published resource is just the &lsquo;DockerEnv&rsquo; trait, which provides a hook to start, stop and check running containers.</p>
-<p>This repo also contains a collection of common scripts for using different containers (mongo, kafka, orientdb, etc).</p>
-<p>As the primary use-case is really for testing, you will typically want to depend on the test-artifact like this:</p>
+<p>dockerenv is just a thin script wrapper which can ensure some docker container is started/stopped, typically to support real integration testing rather than having to mock things out.</p>
+<p>As the primary use-case is really for testing, you may want to include a dependency on the &ldquo;test&rdquo; artifact as well as the main one:</p>
 <pre class="prettyprint"><code class="language-scala">libraryDependencies += &quot;com.github.aaronp&quot; %% &quot;dockerenv&quot; % &quot;latest version&quot; % &quot;test&quot; classifier &quot;tests&quot;
 libraryDependencies += &quot;com.github.aaronp&quot; %% &quot;dockerenv&quot; % &quot;latest version&quot; % &quot;test&quot; 
 </code></pre>
-<p>You could also use this for running example applications like this:</p>
-<p>assuming a project layout where &lsquo;Main&rsquo; is an application which talks to mongo:  * src/main/scala/myapp/Main.scala  * src/test/scala/myapp/DevMain.scala</p>
-<p>You could create a &lsquo;DevMain&rsquo; to as a convenience to run your app stand-alone:</p>
-<pre class="prettyprint"><code class="language-scala">object DevMain {
-  def main(args :Array[Sring]) : Unit = {
-
-     // make sure mongo is running while my app is:
-      dockerenv.postgres().bracket { // the postgres DB is started here if it wasn&#39;t already running
-        dockerenv.mysql().bracket { 
-          // both postgres and mysql DB is started here if it wasn&#39;t already running
-        }
-        // mysql has been stopped, unless it was running
-      }
-  }
-}
-
-
-</code></pre>
-<p>Otherwise you would typically do this in tests themselves. There are &lsquo;BaseXXXSpec&rsquo; abstract classes for the supported docker services which you can extend (e.g. see BaseKafkaSpec, BaseMongoSpec, BaseMySqlSpec, etc)</p>
-<p>We can then write tests like this:</p>
-<pre class="prettyprint"><code class="language-scala">class KafkaTest extends BaseKafkaSpec {
+<p>In doing so this gives you access to the &lsquo;BaseXXXSpec&rsquo; traits (e.g. BaseKafkaSpec) which ensures that kafka is started/stopped for those tests:</p>
+<pre class="prettyprint"><code class="language-scala">class MyKafkaTest extends BaseKafkaSpec {
 
   &quot;Kafka&quot; should {
-    &quot;run&quot; in {
+    &quot;connect to a running kafka instance&quot; in {
       isDockerRunning() shouldBe true
+ 
+      val topic = &quot;testTopic&quot;
+  
 
+      // insert your code here which needs to do something with kafka (e.g. publish/consume some data)
+      // here we just execute a script within the kafka container to demonstrate it&#39;s running by invoking 
+      // &#39;kafka-topics.sh&#39; script within the container via our listTopics.sh wrapper 
       val Success((0, listOutput)) = dockerHandle.runInScriptDir(&quot;listTopics.sh&quot;)
-      listOutput should include(topic)
+      listOutput should not be(empty)
     }
   }
 }
-
 </code></pre>
-<p>NOTE: As we&rsquo;re starting/stopping external resources, you will want to ensure these sorts of tests are NOT run in parallel!</p>
+<h3><a href="#note-" name="note-" class="anchor"><span class="anchor-link"></span></a>NOTE:</h3>
+<p>As we&rsquo;re starting/stopping external resources, you will want to ensure these sorts of tests are NOT run in parallel!</p>
 <p>You could tag them as integration tests, or just put your integration tests in a separate test module.</p>
+<p>You don&rsquo;t need to use those ScalaTest convenience wrappers, however. Just depending on dockerenv gives you access to the currently supported containers. You could for example run a db migration application locally like this: </p>
+<pre class="prettyprint"><code class="language-scala">// get the &#39;mysql&#39; implementation which logs the script output to standard out:
+val mysql = dockerEnv.mysql().withLogger(dockerEnv.stdOut)
+
+// ensure mysql is running in this scope:
+mysql.bracket { 
+  // mysql is running here. If it was already running then this has no effect - if it wasn&#39;t then mysql was started and 
+  // will be stopped outside of this scope 
+  
+  dockerEnv.postgres().bracket {
+    // we now have both mysql and postgres database running. We could invoke now run our app here - 
+    // perhaps some DB migration code for instance.
+  }
+}
+</code></pre>
 </div>
 <div>
 <a href="https://github.com/aaronp/dockerenv/tree/master/src/main/paradox/usage.md" title="Edit this page" class="md-source-file md-edit">
@@ -192,7 +215,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.3.2*
+0.4.4*
 </span>
 </div>
 </article>
