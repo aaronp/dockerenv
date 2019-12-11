@@ -71,7 +71,7 @@ invokeDockerRunKafka() {
     # see https://hub.docker.com/r/spotify/kafka and https://rmoff.net/2018/08/02/kafka-listeners-explained/ for exposing ADVERTISED_LISTENERS and ADVERTISED_HOST
     docker run --rm -t -d -h kafka0 --name "$CONTAINER_NAME" \
       -v ${PROJECT_DIR}:/project \
-      -p 2181:2181 -p 9092:9092 -p 8083:8083 -p 9080:9080 \
+      -p 2181:2181 -p 9092:9092 -p 8083:8083 -p 9080:9080 -p 29092:29092 \
       --env ADVERTISED_HOST=localhost \
       --env ADVERTISED_PORT=9092 \
       --env KAFKA_ADVERTISED_LISTENERS=LISTENER_BOB://kafka0:29092,LISTENER_FRED://localhost:9092 \

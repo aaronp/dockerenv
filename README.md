@@ -6,7 +6,9 @@ dockerenv
 [![Coverage Status](https://coveralls.io/repos/github/aaronp/dockerenv/badge.svg?branch=master)](https://coveralls.io/github/aaronp/dockerenv?branch=master)
 [![Scaladoc](https://javadoc-badge.appspot.com/com.github.aaronp/dockerenv_2.13.svg?label=scaladoc)](https://javadoc-badge.appspot.com/com.github.aaronp/dockerenv_2.13)
 
-A lightweight means of starting/stopping external services (docker images) to facilitate testing/development.
+Dockerenv provides a handle on useful docker containers, typically for running tests against real services as opposed to
+having to mock.
+ 
 
 See docs [here](https://aaronp.github.io/dockerenv/index.html)
 

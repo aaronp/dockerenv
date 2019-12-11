@@ -22,7 +22,7 @@ class KafkaTest extends BaseKafkaSpec {
       e.start()
       e.isRunning() shouldBe (true)
       val Some(projectDirIsLineFromTheIsDockerRunningScript) = output.find(_.contains("PROJECT_DIR is "))
-      KafkaTestAccessor.linesHead(projectDirIsLineFromTheIsDockerRunningScript) shouldBe s"PROJECT_DIR is $dir"
+      projectDirIsLineFromTheIsDockerRunningScript.linesIterator.toList.head shouldBe s"PROJECT_DIR is $dir"
 
     }
   }

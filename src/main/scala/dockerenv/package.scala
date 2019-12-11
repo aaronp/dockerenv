@@ -4,6 +4,12 @@ import java.util.zip.ZipInputStream
 
 package object dockerenv {
 
+  type Logger = String => Unit
+
+  def mysql(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mysql", workDir, logger)
+
+  def postgres(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/postgres", workDir, logger)
+
   object using {
     def apply[A <: AutoCloseable, T](resource: A)(thunk: A => T): T = {
       try {
@@ -13,12 +19,6 @@ package object dockerenv {
       }
     }
   }
-
-  type Logger = String => Unit
-
-  def mysql(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mysql", workDir, logger)
-
-  def postgres(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/postgres", workDir, logger)
 
   def kafka(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/kafka", workDir, logger)
 
