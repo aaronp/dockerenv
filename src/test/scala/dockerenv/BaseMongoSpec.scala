@@ -1,3 +1,3 @@
 package dockerenv
 
-abstract class BaseMongoSpec extends BaseDockerSpec(DockerEnv.mongo())
+abstract class BaseMongoSpec(docker : DockerEnv.Instance = DockerEnv.mongo()) extends BaseDockerSpec(docker)

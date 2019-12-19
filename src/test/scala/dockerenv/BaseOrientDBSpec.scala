@@ -1,3 +1,3 @@
 package dockerenv
 
-abstract class BaseOrientDBSpec extends BaseDockerSpec(DockerEnv.orientDb())
+abstract class BaseOrientDBSpec(docker : DockerEnv.Instance = DockerEnv.orientDb()) extends BaseDockerSpec(docker)
