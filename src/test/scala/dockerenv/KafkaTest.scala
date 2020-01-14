@@ -27,7 +27,7 @@ class KafkaTest extends BaseKafkaSpec {
     }
   }
   "BaseKafkaSpec" should {
-    "allow us to connect to the running kafka container" in insideRunningEnvironment {
+    "allow us to connect to the running kafka container" in {
       isDockerRunning() shouldBe true
 
       //

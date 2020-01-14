@@ -56,6 +56,13 @@ object DockerEnv {
     */
   def kafka(workDir: String = DefaultWorkDir) = dockerenv.kafka(workDir)
 
+  /** Convenience method for returning kafka services
+    *
+    * @param workDir the directory under which the docker run scripts should be extracted
+    * @return a elasticSearch environment
+    */
+  def elasticSearch(workDir: String = DefaultWorkDir) = dockerenv.elasticSearch(workDir)
+
   /** Convenience method for returning orientdb services
     *
     * @param workDir the directory under which the docker run scripts should be extracted

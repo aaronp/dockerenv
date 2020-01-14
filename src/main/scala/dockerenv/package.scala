@@ -20,6 +20,8 @@ package object dockerenv {
     }
   }
 
+  def elasticSearch(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/elasticsearch", workDir, logger)
+
   def kafka(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/kafka", workDir, logger)
 
   def mongo(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mongo", workDir, logger)
