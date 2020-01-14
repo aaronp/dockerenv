@@ -4,7 +4,7 @@ import org.scalatest.time.{Millis, Seconds, Span}
 
 import scala.util.{Success, Try}
 
-abstract class BaseMySqlSpec(docker : DockerEnv.Instance = DockerEnv.mysql()) extends BaseDockerSpec(docker) {
+abstract class BaseMySqlSpec(docker: DockerEnv.Instance = DockerEnv.mysql()) extends BaseDockerSpec(docker) {
 
   implicit override def patienceConfig =
     PatienceConfig(timeout = scaled(Span(testTimeout.toSeconds, Seconds)), interval = scaled(Span(500, Millis)))

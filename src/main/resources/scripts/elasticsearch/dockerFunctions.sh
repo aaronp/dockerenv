@@ -29,7 +29,7 @@ dockerRunElasticSearch () {
 
     ensureVolume
 
-    DOCKER_CMD="docker run --rm --name $IMAGE_NAME -p 9200:9200 -p 9300:9300 -e discovery.type=single-node $ES_IMAGE"
+    DOCKER_CMD="docker run --rm --name $IMAGE_NAME -d -p 9200:9200 -p 9300:9300 -e discovery.type=single-node $ES_IMAGE"
 
     echo "Running '$DOCKER_CMD'"
     exec ${DOCKER_CMD}

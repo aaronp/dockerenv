@@ -11,7 +11,7 @@ enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin)
 enablePlugins(BuildInfoPlugin)
 
-val scalaThirteen = "2.13.0"
+val scalaThirteen = "2.13.1"
 crossScalaVersions := Seq(scalaThirteen, "2.12.10")
 scalaVersion := scalaThirteen
 
@@ -36,7 +36,7 @@ libraryDependencies ++= List(
   "org.scalatest"        %% "scalatest"   % "3.1.0"   % "test",
   "org.pegdown"          % "pegdown"      % "1.6.0"   % "test",
   "com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % "test",
-  "junit"                % "junit"        % "4.12"    % "test"
+  "junit"                % "junit"        % "4.13"    % "test"
 )
 
 publishMavenStyle := true
