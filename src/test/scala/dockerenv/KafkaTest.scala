@@ -6,10 +6,6 @@ import scala.util.Success
 
 class KafkaTest extends BaseKafkaSpec {
 
-  // wow - mysql fails to connect for AGES with:
-  // "ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)"
-  override def testTimeout: FiniteDuration = 2.minutes
-
   "BaseKafkaSpec.withEnv(...).withLogger(...)" should {
     "allow us to control the mount-point via the 'PROJECT_DIR' env property" in {
       val dir    = "someDir"

@@ -19,7 +19,7 @@ ensureVolume () {
   (docker volume ls | grep "$VOLUME_NAME") || createVolume
 }
 
-stopMySql () {
+stopElastic () {
     docker stop "$IMAGE_NAME"
 }
 

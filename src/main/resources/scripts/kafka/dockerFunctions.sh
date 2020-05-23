@@ -15,7 +15,7 @@
 
 export VOLUME_NAME=${VOLUME_NAME:-kafka-data}
 export CONTAINER_NAME=${CONTAINER_NAME:-test-kafka}
-export IMAGE_NAME="dockerenv-kafka"
+export IMAGE_NAME="porpoiseltd/kafka-2.5.0_2.13:latest"
 
 # see https://docs.docker.com/storage/volumes/
 createVolume () {
@@ -31,37 +31,7 @@ stopKafka() {
     docker stop "$CONTAINER_NAME"
 }
 
-buildImage() {
-   echo "Building $IMAGE_NAME"
-   (buildImage && echo "${IMAGE_NAME} built")
-}
-
-checkImageExists() {
-   echo "checking if $IMAGE_NAME exists"
-   (docker image ls | grep "${IMAGE_NAME}")
-}
-
-hasImage() {
-    checkImageExists || buildImage
-}
-buildImage() {
-    THIS_DIR="$(dirname ${0})"
-    pushd ${THIS_DIR}
-    echo "building $IMAGE_NAME in `pwd`"
-    docker build . -t "${IMAGE_NAME}:test"
-    popd
-    if [[ ! checkImageExists ]]; then
-      echo "checkImageExists still doesn't thing $IMAGE_NAME exists"
-    else
-      echo "checkImageExists is happy now"
-    fi
-}
-
 dockerRunKafka() {
-  hasImage && invokeDockerRunKafka
-}
-
-invokeDockerRunKafka() {
 
     THIS_DIR="$(dirname ${0})"
     export PROJECT_DIR=${PROJECT_DIR:-`pwd`}
@@ -76,7 +46,7 @@ invokeDockerRunKafka() {
       --env ADVERTISED_PORT=9092 \
       --env KAFKA_ADVERTISED_LISTENERS=LISTENER_BOB://kafka0:29092,LISTENER_FRED://localhost:9092 \
       --env KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_BOB:PLAINTEXT,LISTENER_FRED:PLAINTEXT \
-      "${IMAGE_NAME}:test"
+      "${IMAGE_NAME}"
 
 }
 

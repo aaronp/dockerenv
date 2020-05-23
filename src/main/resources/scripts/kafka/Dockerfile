@@ -3,11 +3,13 @@
 # Others are available, but this was the snappiest to start/stop I found, so I've just repurposed
 # it to use the java stretch base and latest kafka.
 #
+# 23 March 2020: This has been published as porpoiseltd/kafka-2.5.0_2.13 so the kafa start/stop no longer has to
+# *ahem* build the full image
 FROM openjdk:11-jre-stretch
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV SCALA_VERSION 2.12
-ENV KAFKA_VERSION 2.2.0
+ENV SCALA_VERSION 2.13
+ENV KAFKA_VERSION 2.5.0
 ENV KAFKA_HOME /opt/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION"
 
 ADD scripts/start-kafka.sh /usr/bin/start-kafka.sh

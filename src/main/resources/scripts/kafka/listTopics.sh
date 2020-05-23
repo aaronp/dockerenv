@@ -5,4 +5,4 @@ DIR=`dirname $0`
 source "$DIR/"dockerFunctions.sh
 
 echo "topics for $CONTAINER_NAME are..."
-docker exec -t "${CONTAINER_NAME}" /opt/kafka_2.12-2.2.0/bin/kafka-topics.sh --list --zookeeper localhost:2181
+docker exec -t "${CONTAINER_NAME}" /opt/kafka_2.13-2.5.0/bin/kafka-topics.sh --list --zookeeper localhost:2181

@@ -2,4 +2,4 @@
 
 source dockerFunctions.sh
 
-stopMySql
+stopElastic
