@@ -7,7 +7,7 @@
 # see https://hub.docker.com/_/mysql
 export VOLUME_NAME=${VOLUME_NAME:-elasticsearch-data}
 export IMAGE_NAME=${IMAGE_NAME:-dockerenv-elasticsearch}
-export ES_IMAGE=${ES_IMAGE:-elasticsearch:7.5.1}
+export ES_IMAGE=${ES_IMAGE:-elasticsearch:7.9.1}
 
 # see https://docs.docker.com/storage/volumes/
 createVolume () {

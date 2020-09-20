@@ -2,9 +2,11 @@ package dockerenv
 
 import java.util.UUID
 
-import org.scalatest._
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, GivenWhenThen}
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.concurrent.duration._
 
@@ -12,7 +14,7 @@ import scala.concurrent.duration._
   * Base test class which ensures the container in the script directory is running before/after the tests
   */
 abstract class BaseDockerSpec(val dockerHandle: DockerEnv.Instance)
-    extends WordSpec
+    extends AnyWordSpec
     with Matchers
     with Eventually
     with BeforeAndAfterAll

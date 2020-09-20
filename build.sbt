@@ -11,7 +11,7 @@ enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin)
 enablePlugins(BuildInfoPlugin)
 
-val scalaThirteen = "2.13.1"
+val scalaThirteen = "2.13.3"
 crossScalaVersions := Seq(scalaThirteen, "2.12.10")
 scalaVersion := scalaThirteen
 
@@ -32,8 +32,8 @@ siteSourceDirectory := target.value / "paradox" / "site" / "main"
 siteSubdirName in SiteScaladoc := "api/latest"
 
 libraryDependencies ++= List(
-  "org.scalactic"        %% "scalactic"   % "3.1.0"   % "test",
-  "org.scalatest"        %% "scalatest"   % "3.1.0"   % "test",
+  "org.scalactic"        %% "scalactic"   % "3.2.2"   % "test",
+  "org.scalatest"        %% "scalatest"   % "3.2.2"   % "test",
   "org.pegdown"          % "pegdown"      % "1.6.0"   % "test",
   "com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % "test",
   "junit"                % "junit"        % "4.13"    % "test"
