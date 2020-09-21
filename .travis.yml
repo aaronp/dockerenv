@@ -1,6 +1,6 @@
 language: scala
 scala:
-  - 2.13.2
+  - 2.13.3
 script:
   - sbt ++$TRAVIS_SCALA_VERSION -jvm-opts travis/jvmopts clean coverage test
 jdk:
