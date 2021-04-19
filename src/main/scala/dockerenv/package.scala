@@ -24,6 +24,8 @@ package object dockerenv {
 
   def kafka(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/kafka", workDir, logger)
 
+  def kafkaFull(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/kafka-full", workDir, logger)
+
   def mongo(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mongo", workDir, logger)
 
   def mqtt(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/mqtt", workDir, logger)

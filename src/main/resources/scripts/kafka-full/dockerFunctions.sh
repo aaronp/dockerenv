@@ -29,7 +29,7 @@ dockerRunKafka () {
 
     ensureVolume
 
-    DOCKER_CMD="docker run --net=host --rm --name $IMAGE_NAME -d \
+    DOCKER_CMD="docker run --rm --name $IMAGE_NAME -d \
        -p 2181:2181 \
        -p 3030:3030 \
        -p 8081-8083:8081-8083 \

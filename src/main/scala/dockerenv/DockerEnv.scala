@@ -56,6 +56,13 @@ object DockerEnv {
     */
   def kafka(workDir: String = DefaultWorkDir) = dockerenv.kafka(workDir)
 
+  /**
+    * Wraps the landoop fast-data-dev (which includes schema registry, etc)
+    * @param workDir
+    * @return
+    */
+  def kafkaFull(workDir: String = DefaultWorkDir) = dockerenv.kafka(workDir)
+
   /** Convenience method for returning kafka services
     *
     * @param workDir the directory under which the docker run scripts should be extracted
