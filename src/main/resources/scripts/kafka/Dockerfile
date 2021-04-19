@@ -9,7 +9,7 @@ FROM openjdk:11-jre-stretch
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV SCALA_VERSION 2.13
-ENV KAFKA_VERSION 2.5.0
+ENV KAFKA_VERSION 2.8.0
 ENV KAFKA_HOME /opt/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION"
 
 ADD scripts/start-kafka.sh /usr/bin/start-kafka.sh
