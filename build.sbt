@@ -11,9 +11,9 @@ enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin)
 enablePlugins(BuildInfoPlugin)
 
-val scala13 = "2.13.5"
-crossScalaVersions := Seq(scala13)
-scalaVersion := scala13
+val scala12 = "2.12.12"
+crossScalaVersions := Seq(scala12)
+scalaVersion := scala12
 
 paradoxProperties += ("project.url" -> "https://aaronp.github.io/dockerenv/docs/current/")
 
