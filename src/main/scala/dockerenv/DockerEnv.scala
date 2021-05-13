@@ -91,6 +91,8 @@ object DockerEnv {
     */
   def postgres(workDir: String = DefaultWorkDir) = dockerenv.postgres(workDir)
 
+  def oracle(workDir: String = DefaultWorkDir) = dockerenv.oracle(workDir)
+
   /** Convenience method for returning postgres services
     *
     * @param workDir the directory under which the docker run scripts should be extracted

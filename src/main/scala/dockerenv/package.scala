@@ -10,6 +10,8 @@ package object dockerenv {
 
   def postgres(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/postgres", workDir, logger)
 
+  def oracle(workDir: String = DefaultWorkDir, logger: Logger = defaultLogger): DockerEnv.Instance = envFor("scripts/oracle", workDir, logger)
+
   object using {
     def apply[A <: AutoCloseable, T](resource: A)(thunk: A => T): T = {
       try {
