@@ -6,7 +6,6 @@
 #
 # see https://hub.docker.com/_/oracle
 export VOLUME_NAME=${VOLUME_NAME:-oracle-data}
-export BACKUP_VOLUME_NAME=${VOLUME_NAME:-oracle-data-backup}
 export IMAGE_NAME=${IMAGE_NAME:-dockerenv-oracle}
 export ORACLE_PORT=${ORACLE_PORT:-9020}
 
@@ -15,14 +14,10 @@ createVolume () {
 	echo "Creating new volume $VOLUME_NAME"
 	docker volume create "$VOLUME_NAME"
 }
-createBackupVolume () {
-	echo "Creating new backup volume $BACKUP_VOLUME_NAME"
-	docker volume create "$BACKUP_VOLUME_NAME"
-}
+
 
 ensureVolume () {
   (docker volume ls | grep "$VOLUME_NAME") || createVolume
-  (docker volume ls | grep "$BACKUP_VOLUME_NAME") || createBackupVolume
 }
 
 stopOracle () {
@@ -39,7 +34,7 @@ dockerRunOracle () {
     mkdir -p "$ORACLE_DATA_DIR"
     echo "starting oracle w/ ORACLE_DATA_DIR set to $ORACLE_DATA_DIR"
 
-    ORACLE_CMD="docker run --rm --name $IMAGE_NAME -p 5432:5432 -v $(pwd):/var/lib/oracleql/data -v ${VOLUME_NAME}:/oracle/databases -v ${BACKUP_VOLUME_NAME}:/oracle/backup -d oracleinanutshell/oracle-xe-11g:latest"
+    ORACLE_CMD="docker run --rm --name $IMAGE_NAME -p 49161:1521 -p 8080:8080 -v $(pwd):/var/lib/oracleql/data -v ${VOLUME_NAME}:/oracle/databases -d oracleinanutshell/oracle-xe-11g:latest"
 
     echo "Running $ORACLE_CMD"
     exec ${ORACLE_CMD}

@@ -1,5 +1,5 @@
 import org.scoverage.coveralls.Imports.CoverallsKeys._
-import sbtbuildinfo.BuildInfoPlugin.autoImport.buildInfoPackage
+//import sbtbuildinfo.BuildInfoPlugin.autoImport.buildInfoPackage
 
 name := "dockerenv"
 
@@ -9,7 +9,7 @@ enablePlugins(GhpagesPlugin)
 enablePlugins(ParadoxPlugin)
 enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin)
-enablePlugins(BuildInfoPlugin)
+//enablePlugins(BuildInfoPlugin)
 
 val scala13 = "2.13.5"
 crossScalaVersions := Seq(scala13)
@@ -30,6 +30,23 @@ Compile / paradoxMaterialTheme ~= {
 siteSourceDirectory := target.value / "paradox" / "site" / "main"
 
 siteSubdirName in SiteScaladoc := "api/latest"
+
+// see
+// https://repo1.maven.org/maven2/com/oracle/ojdbc/
+// https://medium.com/oracledevs/your-own-way-oracle-jdbc-drivers-19-7-0-0-on-maven-central-9a7dbb648995
+val dbTestDeps = List(
+  "com.oracle.database.jdbc" % "ojdbc8" % "19.7.0.0" % "test"
+//  "com.oracle.jdbc" % "ojdbc-bom" % "19.3.0.0"   % "test"
+//  "com.oracle" % "classes12" % "10.2.0.2.0" % "test"
+)
+
+val scalaJDBC = Seq(
+  "org.scalikejdbc" %% "scalikejdbc"      % "3.5.0" % "test",
+  "org.scalikejdbc" %% "scalikejdbc-test" % "3.5.0" % "test",
+  "ch.qos.logback"  % "logback-classic"   % "1.2.3" % "test"
+)
+
+libraryDependencies ++= dbTestDeps ++ scalaJDBC
 
 libraryDependencies ++= List(
   "org.scalactic"        %% "scalactic"   % "3.2.2"   % "test",
@@ -66,12 +83,12 @@ credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
 // https://github.com/scoverage/sbt-coveralls#specifying-your-repo-token
 coverallsTokenFile := Option((Path.userHome / ".sbt" / ".coveralls.dockerenv").asPath.toString)
 
-buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
-buildInfoPackage := "dockerenv.build"
+//buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
+//buildInfoPackage := "dockerenv.buildinfo"
 
 // see http://scalameta.org/scalafmt/
 scalafmtOnCompile in ThisBuild := true
-scalafmtVersion in ThisBuild := "1.4.0"
+ThisBuild / scalafmtVersion := "1.4.0"
 
 // see http://www.scalatest.org/user_guide/using_scalatest_with_sbt
 testOptions in Test += (Tests.Argument(TestFrameworks.ScalaTest, "-h", s"target/scalatest-reports", "-oN"))
