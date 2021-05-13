@@ -34,7 +34,7 @@ dockerRunOracle () {
     mkdir -p "$ORACLE_DATA_DIR"
     echo "starting oracle w/ ORACLE_DATA_DIR set to $ORACLE_DATA_DIR"
 
-    ORACLE_CMD="docker run --rm --name $IMAGE_NAME -p 49161:1521 -p 8080:8080 -v $(pwd):/var/lib/oracleql/data -v ${VOLUME_NAME}:/oracle/databases -d oracleinanutshell/oracle-xe-11g:latest"
+    ORACLE_CMD="docker run --rm --name $IMAGE_NAME -p 1521:1521 -p 8080:8080 -v $(pwd):/var/lib/oracleql/data -v ${VOLUME_NAME}:/oracle/databases -d oracleinanutshell/oracle-xe-11g:latest"
 
     echo "Running $ORACLE_CMD"
     exec ${ORACLE_CMD}
